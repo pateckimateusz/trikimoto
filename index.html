@@ -3,423 +3,665 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Triki Moto 2.0</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triki Moto 2.1</title>
 <style>
+:root {
+  --bg:#0b1019;
+  --card:#172131;
+  --line:#29394d;
+  --text:#eef5ff;
+  --muted:#94a8c0;
+  --blue:#46b6ff;
+  --green:#49db9d;
+  --red:#ff6678;
+}
 * { box-sizing:border-box; }
 body {
   margin:0;
-  padding:16px;
-  background:#10151d;
-  color:#f1f5f9;
-  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif;
 }
-h1 { text-align:center; margin:8px 0 4px; }
-.subtitle { text-align:center;color:#94a3b8;font-size:12px; }
-.panel {
-  background:#1e2937;
-  border:1px solid #334155;
-  border-radius:15px;
-  padding:15px;
-  margin:14px 0;
+main {
+  max-width:850px;
+  margin:auto;
+  padding:18px;
 }
-button {
-  background:#287bea;
+h1 { margin:5px 0; font-size:25px; }
+h2 { margin:0 0 14px; font-size:17px; }
+p { color:var(--muted); }
+.card {
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:17px;
+  margin-top:15px;
+}
+.row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+button,select {
+  border:1px solid var(--line);
+  background:#25354b;
   color:white;
-  border:0;
   border-radius:10px;
-  padding:14px;
-  font-size:15px;
-  font-weight:bold;
-  width:100%;
-  margin:5px 0;
+  padding:12px;
+  font-size:14px;
 }
-button.secondary { background:#475569; }
-button:disabled { opacity:.4; }
-.status { text-align:center;color:#fbbf24;padding:8px; }
+button { cursor:pointer; }
+button.primary {
+  background:#087cc5;
+  border-color:#087cc5;
+}
+button:disabled { opacity:.45; }
+.status { font-size:14px; color:var(--muted); }
 .grid {
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:8px;
+  gap:10px;
 }
 .metric {
-  background:#111c29;
-  border-radius:10px;
-  padding:12px 5px;
+  background:#101a28;
+  border-radius:12px;
+  padding:14px 7px;
   text-align:center;
 }
-.metric small { color:#94a3b8;font-size:11px; }
+.metric span {
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+}
 .metric strong {
   display:block;
-  font-size:25px;
-  margin-top:7px;
+  margin-top:5px;
+  font-size:29px;
   font-variant-numeric:tabular-nums;
 }
-.lean {
-  text-align:center;
-  font-size:55px;
-  font-weight:bold;
-  margin:10px 0;
-  font-variant-numeric:tabular-nums;
-}
-.lean small { font-size:14px;color:#94a3b8; }
 .scene {
-  height:190px;
+  height:225px;
   display:flex;
-  justify-content:center;
   align-items:center;
-  perspective:600px;
+  justify-content:center;
+  perspective:650px;
   overflow:hidden;
 }
-.cube {
-  width:110px;
-  height:110px;
+.bike {
   position:relative;
+  width:115px;
+  height:165px;
   transform-style:preserve-3d;
-  transition:transform .04s linear;
+  transition:transform .06s linear;
 }
-.face {
+.bike .body {
   position:absolute;
-  width:110px;
-  height:110px;
-  border:2px solid #7dd3fc;
-  background:rgba(14,116,144,.65);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-weight:bold;
-  font-size:16px;
-  backface-visibility:visible;
+  inset:0;
+  background:linear-gradient(145deg,#2399e6,#064b84);
+  border:3px solid #7ed1ff;
+  border-radius:36px 36px 25px 25px;
+  box-shadow:0 12px 35px #0008;
 }
-.front { transform:translateZ(55px); }
-.back { transform:rotateY(180deg) translateZ(55px); }
-.right { transform:rotateY(90deg) translateZ(55px); }
-.left { transform:rotateY(-90deg) translateZ(55px); }
-.top { transform:rotateX(90deg) translateZ(55px);background:rgba(34,197,94,.65); }
-.bottom { transform:rotateX(-90deg) translateZ(55px); }
-canvas { width:100%;height:120px; }
-.row { display:flex;justify-content:space-between;gap:10px;margin:8px 0; }
-.muted { color:#94a3b8;font-size:12px; }
+.bike .center {
+  position:absolute;
+  top:15%;
+  left:44%;
+  width:12%;
+  height:70%;
+  border-radius:8px;
+  background:#b7e9ff;
+}
+.bike .front {
+  position:absolute;
+  top:-16px;
+  left:28%;
+  width:44%;
+  height:26px;
+  background:#dbefff;
+  border-radius:7px;
+}
+.horizon {
+  height:2px;
+  background:#52647b;
+  width:90%;
+  margin:-110px auto 110px;
+  opacity:.45;
+}
+canvas {
+  width:100%;
+  height:155px;
+  display:block;
+}
+label {
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:6px;
+}
+input[type=range] { width:100%; }
+.small {
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.5;
+}
+pre {
+  white-space:pre-wrap;
+  font-size:12px;
+  color:#b9d5f2;
+  line-height:1.6;
+}
+@media(max-width:450px) {
+  .metric strong { font-size:23px; }
+  main { padding:11px; }
+}
 </style>
 </head>
-
 <body>
+<main>
 
-<h1>TRIKI MOTO</h1>
-<div class="subtitle">Motorcycle IMU Monitor · Version 2.0</div>
+<h1>🏍️ Triki Moto 2.1</h1>
+<p>Bezprzewodowy czujnik przechyłu motocykla</p>
 
-<div class="panel">
-  <div id="status" class="status">Rozłączono</div>
-  <button id="connect">POŁĄCZ Z TRIKI</button>
-  <button id="disconnect" class="secondary" disabled>ROZŁĄCZ</button>
-</div>
-
-<div class="panel">
-  <h3 style="text-align:center">KĄT PRZECHYŁU</h3>
-  <div class="lean"><span id="roll">0.0</span><small>°</small></div>
-  <div class="grid">
-    <div class="metric">
-      <small>ROLL</small>
-      <strong id="roll2">0°</strong>
-    </div>
-    <div class="metric">
-      <small>PITCH</small>
-      <strong id="pitch">0°</strong>
-    </div>
-    <div class="metric">
-      <small>YAW</small>
-      <strong id="yaw">0°</strong>
-    </div>
+<div class="card">
+  <div class="row">
+    <button class="primary" id="connect">Połącz Triki</button>
+    <button id="disconnect" disabled>Rozłącz</button>
+    <button id="zero">Wyzeruj</button>
   </div>
+  <p class="status" id="status">Niepołączono</p>
 </div>
 
-<div class="panel">
-  <h3 style="text-align:center">ORIENTACJA 3D</h3>
+<div class="card">
+  <h2>Wizualizacja przechyłu</h2>
   <div class="scene">
-    <div id="cube" class="cube">
-      <div class="face front">PRZÓD</div>
-      <div class="face back">TYŁ</div>
-      <div class="face right">PRAWO</div>
-      <div class="face left">LEWO</div>
-      <div class="face top">TRIKI</div>
-      <div class="face bottom">DÓŁ</div>
+    <div class="bike" id="bike">
+      <div class="body"></div>
+      <div class="center"></div>
+      <div class="front"></div>
     </div>
   </div>
-  <div class="muted" style="text-align:center">
-    Model poglądowy – orientacja według osi czujnika
-  </div>
-</div>
-
-<div class="panel">
-  <h3>MAKSYMALNE WYCHYLENIE</h3>
   <div class="grid">
     <div class="metric">
-      <small>LEWO</small>
-      <strong id="maxLeft">0°</strong>
+      <span>LEWO</span>
+      <strong id="left">0.0°</strong>
     </div>
     <div class="metric">
-      <small>PRAWO</small>
-      <strong id="maxRight">0°</strong>
+      <span>ROLL</span>
+      <strong id="roll">0.0°</strong>
     </div>
     <div class="metric">
-      <small>PRÓBKI</small>
-      <strong id="frames">0</strong>
+      <span>PRAWO</span>
+      <strong id="right">0.0°</strong>
     </div>
   </div>
-  <button id="reset" class="secondary">ZERUJ POZYCJĘ I REKORDY</button>
 </div>
 
-<div class="panel">
-  <h3>WYKRES PRZECHYŁU</h3>
-  <canvas id="chart" width="600" height="180"></canvas>
-</div>
-
-<div class="panel">
-  <h3>ŻYROSKOP – °/s</h3>
+<div class="card">
+  <h2>Orientacja</h2>
   <div class="grid">
-    <div class="metric"><small>X</small><strong id="gx">0</strong></div>
-    <div class="metric"><small>Y</small><strong id="gy">0</strong></div>
-    <div class="metric"><small>Z</small><strong id="gz">0</strong></div>
+    <div class="metric">
+      <span>Pitch</span>
+      <strong id="pitch">0.0°</strong>
+    </div>
+    <div class="metric">
+      <span>Yaw względny</span>
+      <strong id="yaw">0.0°</strong>
+    </div>
+    <div class="metric">
+      <span>Częstotliwość</span>
+      <strong id="hz">0 Hz</strong>
+    </div>
   </div>
 </div>
 
-<div class="panel">
-  <h3>AKCELEROMETR – g</h3>
+<div class="card">
+  <h2>Maksymalne przechyły</h2>
   <div class="grid">
-    <div class="metric"><small>X</small><strong id="ax">0</strong></div>
-    <div class="metric"><small>Y</small><strong id="ay">0</strong></div>
-    <div class="metric"><small>Z</small><strong id="az">0</strong></div>
+    <div class="metric">
+      <span>Maks. lewo</span>
+      <strong id="maxLeft">0.0°</strong>
+    </div>
+    <div class="metric">
+      <span>Maks. prawo</span>
+      <strong id="maxRight">0.0°</strong>
+    </div>
+    <div class="metric">
+      <span>Czas pracy</span>
+      <strong id="runtime">0 s</strong>
+    </div>
   </div>
+  <button id="resetMax">Reset maksimum</button>
 </div>
 
-<div class="panel">
-  <div class="row"><span class="muted">Odebrane ramki</span><b id="count">0</b></div>
-  <div class="row"><span class="muted">Ostatni pomiar</span><b id="last">-</b></div>
-  <div class="row"><span class="muted">Częstotliwość</span><b id="hz">0 Hz</b></div>
-  <div class="muted">
-    Kąty w tej wersji są obliczane przez całkowanie żyroskopu.
-    Akcelerometr jest wyświetlany diagnostycznie.
-    Nie jest to jeszcze skorygowany pomiar rzeczywistego
-    przechyłu motocykla.
-  </div>
+<div class="card">
+  <h2>Historia przechyłu</h2>
+  <canvas id="chart"></canvas>
 </div>
+
+<div class="card">
+  <h2>Filtr komplementarny</h2>
+
+  <label>
+    Udział żyroskopu:
+    <b id="alphaValue">98.0%</b>
+  </label>
+  <input id="alpha" type="range"
+         min="90" max="99.9"
+         value="98" step="0.1">
+
+  <label style="margin-top:15px">
+    Kierunek korekty akcelerometru
+  </label>
+  <select id="accSign">
+    <option value="1">Normalny</option>
+    <option value="-1">Odwrócony</option>
+  </select>
+
+  <p class="small">
+    Korekta jest ograniczana, gdy wartość przyspieszenia
+    znacząco odbiega od 1 g. Filtr jest przeznaczony
+    na razie do testów statycznych.
+  </p>
+</div>
+
+<div class="card">
+  <h2>Diagnostyka</h2>
+  <pre id="debug">Oczekiwanie na dane...</pre>
+</div>
+
+</main>
 
 <script>
-const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e';
-const RX='6e400002-b5a3-f393-e0a9-e50e24dcca9e';
-const TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+"use strict";
 
-const START=new Uint8Array([
-  0x20,0x10,0x00,0xD0,0x07,0x68,0x00,0x03
-]);
+// ===== BLE =====
 
-let device=null, rx=null, tx=null;
-let buffer=new Uint8Array(0);
-let count=0, lastTime=0, hzCount=0, hzTime=0;
+const SERVICE =
+  "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
 
-let roll=0, pitch=0, yaw=0;
-let maxLeft=0, maxRight=0;
-let lastSample=0;
-let chartData=[];
+const RX =
+  "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
 
-const $=id=>document.getElementById(id);
-const RAD=180/Math.PI;
+const TX =
+  "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
-function show(id,value) {
-  $(id).textContent=value;
+const START_COMMAND =
+  new Uint8Array([0x20,0x10,0x00,0xD0,
+                  0x07,0x68,0x00,0x03]);
+
+let device = null;
+let server = null;
+let tx = null;
+let rx = null;
+let buffer = [];
+
+// ===== STAN =====
+
+let roll = 0;
+let pitch = 0;
+let yaw = 0;
+
+let zeroRoll = 0;
+let zeroPitch = 0;
+let zeroYaw = 0;
+
+let maxLeft = 0;
+let maxRight = 0;
+
+let lastTime = 0;
+let startTime = 0;
+let frameCounter = 0;
+let lastHzTime = 0;
+let frequency = 0;
+
+let alpha = 0.98;
+let accelSign = 1;
+
+let history = [];
+const HISTORY_LENGTH = 220;
+
+let calibrationFrames = 0;
+let calibrationRollSum = 0;
+let calibrationPitchSum = 0;
+const CALIBRATION_COUNT = 100;
+let calibrated = false;
+
+// ===== ELEMENTY =====
+
+const $ = id => document.getElementById(id);
+
+function status(text) {
+  $("status").textContent = text;
 }
 
-function setStatus(s) {
-  show('status',s);
-}
+// ===== BLUETOOTH =====
 
 async function connect() {
   try {
-    setStatus('Wyszukiwanie Triki...');
-
-    device=await navigator.bluetooth.requestDevice({
-      filters:[{namePrefix:'Triki'}],
-      optionalServices:[SERVICE]
-    });
-
-    device.addEventListener('gattserverdisconnected',onDisconnect);
-
-    const server=await device.gatt.connect();
-    const service=await server.getPrimaryService(SERVICE);
-
-    rx=await service.getCharacteristic(RX);
-    tx=await service.getCharacteristic(TX);
-
-    await tx.startNotifications();
-    tx.addEventListener('characteristicvaluechanged',onData);
-
-    if(rx.properties.writeWithoutResponse) {
-      await rx.writeValueWithoutResponse(START);
-    } else {
-      await rx.writeValue(START);
-    }
-
-    buffer=new Uint8Array(0);
-    count=0;
-    lastSample=0;
-
-    $('connect').disabled=true;
-    $('disconnect').disabled=false;
-
-    setStatus('POŁĄCZONO – POMIAR AKTYWNY');
-
-  } catch(e) {
-    setStatus('Błąd: '+e.message);
-    console.error(e);
-  }
-}
-
-function onDisconnect() {
-  setStatus('Rozłączono');
-  $('connect').disabled=false;
-  $('disconnect').disabled=true;
-  rx=null;
-  tx=null;
-}
-
-function disconnect() {
-  if(device && device.gatt.connected) device.gatt.disconnect();
-  else onDisconnect();
-}
-
-function onData(event) {
-  const d=event.target.value;
-  const incoming=new Uint8Array(d.buffer,d.byteOffset,d.byteLength);
-
-  const joined=new Uint8Array(buffer.length+incoming.length);
-  joined.set(buffer);
-  joined.set(incoming,buffer.length);
-  buffer=joined;
-
-  while(buffer.length>=14) {
-    let h=-1;
-
-    for(let i=0;i<=buffer.length-2;i++) {
-      if(buffer[i]===0x22 &&
-        (buffer[i+1]===0x00 || buffer[i+1]===0x01)) {
-        h=i;
-        break;
-      }
-    }
-
-    if(h<0) {
-      buffer=buffer.slice(-1);
+    if (!navigator.bluetooth) {
+      status("Bluetooth Web API niedostępne.");
       return;
     }
 
-    if(h>0) buffer=buffer.slice(h);
-    if(buffer.length<14) return;
+    status("Wybierz Triki...");
+    $("connect").disabled = true;
 
-    const v=new DataView(buffer.buffer,buffer.byteOffset,14);
-    const raw=[];
+    device = await navigator.bluetooth.requestDevice({
+      filters:[{namePrefix:"Triki"}],
+      optionalServices:[SERVICE]
+    });
 
-    for(let i=0;i<6;i++) raw.push(v.getInt16(2+i*2,true));
+    device.addEventListener(
+      "gattserverdisconnected",
+      onDisconnected
+    );
 
-    process(raw);
-    buffer=buffer.slice(14);
+    status("Łączenie...");
+    server = await device.gatt.connect();
+
+    const service =
+      await server.getPrimaryService(SERVICE);
+
+    rx = await service.getCharacteristic(RX);
+    tx = await service.getCharacteristic(TX);
+
+    await tx.startNotifications();
+
+    tx.addEventListener(
+      "characteristicvaluechanged",
+      onData
+    );
+
+    resetState();
+
+    await rx.writeValue(START_COMMAND);
+
+    $("disconnect").disabled = false;
+    status("Połączono. Kalibracja – trzymaj Triki poziomo.");
+  } catch(e) {
+    status("Błąd: " + e.message);
+    $("connect").disabled = false;
   }
 }
 
-function process(v) {
-  const now=performance.now();
-  let dt=lastSample ? (now-lastSample)/1000 : 0;
-  lastSample=now;
+function disconnect() {
+  if(device && device.gatt.connected) {
+    device.gatt.disconnect();
+  }
+}
 
-  // Odrzucenie dużej przerwy po utracie połączenia.
-  dt=Math.min(dt,0.05);
+function onDisconnected() {
+  $("connect").disabled = false;
+  $("disconnect").disabled = true;
+  status("Rozłączono");
+}
 
-  // LSM6DSL: zakres żyroskopu ±2000°/s
-  // i akcelerometru ±16g.
-  const gx=v[0]/14.286;
-  const gy=v[1]/14.286;
-  const gz=v[2]/14.286;
+$("connect").onclick = connect;
+$("disconnect").onclick = disconnect;
 
-  const ax=v[3]/2048;
-  const ay=v[4]/2048;
-  const az=v[5]/2048;
+// ===== PARSOWANIE DANYCH =====
 
-  // Na podstawie testów orientacji Twojego Triki:
-  // Y = przechył lewo/prawo
-  // X = pochylenie przód/tył
-  // Z = obrót wokół osi pionowej
-  roll-=gy*dt;
-  pitch+=gx*dt;
-  yaw+=gz*dt;
+function onData(event) {
+  const view = event.target.value;
 
-  show('roll',roll.toFixed(1));
-  show('roll2',roll.toFixed(1)+'°');
-  show('pitch',pitch.toFixed(1)+'°');
-  show('yaw',yaw.toFixed(1)+'°');
+  for(let i=0;i<view.byteLength;i++) {
+    buffer.push(view.getUint8(i));
+  }
 
-  show('gx',gx.toFixed(1));
-  show('gy',gy.toFixed(1));
-  show('gz',gz.toFixed(1));
+  while(buffer.length >= 14) {
+    if(buffer[0] !== 0x22) {
+      buffer.shift();
+      continue;
+    }
 
-  show('ax',ax.toFixed(2));
-  show('ay',ay.toFixed(2));
-  show('az',az.toFixed(2));
+    if(buffer[1] !== 0x00 &&
+       buffer[1] !== 0x01) {
+      buffer.shift();
+      continue;
+    }
 
-  if(roll<maxLeft) maxLeft=roll;
-  if(roll>maxRight) maxRight=roll;
+    const frame = buffer.splice(0,14);
 
-  show('maxLeft',maxLeft.toFixed(1)+'°');
-  show('maxRight',maxRight.toFixed(1)+'°');
+    const dv = new DataView(
+      Uint8Array.from(frame).buffer
+    );
 
-  $('cube').style.transform=
-    `rotateX(${pitch}deg) rotateY(${roll}deg) rotateZ(${yaw}deg)`;
+    const values = [];
 
-  chartData.push(roll);
-  if(chartData.length>120) chartData.shift();
+    for(let i=0;i<6;i++) {
+      values.push(dv.getInt16(2+i*2,true));
+    }
+
+    processFrame(values);
+  }
+
+  if(buffer.length > 1024) {
+    buffer = [];
+  }
+}
+
+// ===== OBLICZENIA =====
+
+function processFrame(v) {
+  const now = performance.now();
+
+  if(!lastTime) {
+    lastTime = now;
+    return;
+  }
+
+  let dt = (now-lastTime)/1000;
+  lastTime = now;
+
+  if(dt <= 0 || dt > 0.25) {
+    return;
+  }
+
+  // Skale używane w poprzedniej wersji
+  const gx = v[0]/14.286;
+  const gy = v[1]/14.286;
+  const gz = v[2]/14.286;
+
+  const ax = v[3]/2048;
+  const ay = v[4]/2048;
+  const az = v[5]/2048;
+
+  // Żyroskop – zachowany kierunek Roll
+  const gyroRoll = roll - gy*dt;
+  const gyroPitch = pitch + gx*dt;
+
+  yaw += gz*dt;
+
+  // Akcelerometr
+  const accelRoll =
+    accelSign*Math.atan2(ax,az)*180/Math.PI;
+
+  const accelPitch =
+    Math.atan2(
+      -ay,
+      Math.sqrt(ax*ax+az*az)
+    )*180/Math.PI;
+
+  const magnitude =
+    Math.sqrt(ax*ax+ay*ay+az*az);
+
+  // Korekta tylko przy przyspieszeniu
+  // zbliżonym do 1 g
+  const gravityReliable =
+    magnitude > 0.90 &&
+    magnitude < 1.10;
+
+  if(gravityReliable) {
+    roll =
+      alpha*gyroRoll +
+      (1-alpha)*accelRoll;
+
+    pitch =
+      alpha*gyroPitch +
+      (1-alpha)*accelPitch;
+  } else {
+    roll = gyroRoll;
+    pitch = gyroPitch;
+  }
+
+  // Wstępna kalibracja poziomu
+  if(!calibrated && gravityReliable) {
+    calibrationRollSum += roll;
+    calibrationPitchSum += pitch;
+    calibrationFrames++;
+
+    if(calibrationFrames >= CALIBRATION_COUNT) {
+      zeroRoll =
+        calibrationRollSum/calibrationFrames;
+
+      zeroPitch =
+        calibrationPitchSum/calibrationFrames;
+
+      zeroYaw = yaw;
+      calibrated = true;
+
+      status("Połączono – kalibracja zakończona");
+    }
+  }
+
+  const shownRoll = roll-zeroRoll;
+  const shownPitch = pitch-zeroPitch;
+  const shownYaw = yaw-zeroYaw;
+
+  if(calibrated) {
+    maxLeft = Math.max(maxLeft,-shownRoll);
+    maxRight = Math.max(maxRight,shownRoll);
+  }
+
+  frameCounter++;
+
+  if(now-lastHzTime >= 1000) {
+    frequency =
+      frameCounter*1000/(now-lastHzTime);
+
+    frameCounter = 0;
+    lastHzTime = now;
+  }
+
+  if(calibrated) {
+    history.push(shownRoll);
+
+    if(history.length > HISTORY_LENGTH) {
+      history.shift();
+    }
+  }
+
+  updateUI({
+    gx,gy,gz,
+    ax,ay,az,
+    magnitude,
+    gravityReliable,
+    accelRoll,
+    shownRoll,
+    shownPitch,
+    shownYaw,
+    now
+  });
+}
+
+// ===== INTERFEJS =====
+
+function updateUI(d) {
+  const fmt = n => n.toFixed(1)+"°";
+
+  $("roll").textContent = fmt(d.shownRoll);
+  $("pitch").textContent = fmt(d.shownPitch);
+  $("yaw").textContent = fmt(d.shownYaw);
+
+  $("left").textContent =
+    fmt(Math.max(0,-d.shownRoll));
+
+  $("right").textContent =
+    fmt(Math.max(0,d.shownRoll));
+
+  $("maxLeft").textContent = fmt(maxLeft);
+  $("maxRight").textContent = fmt(maxRight);
+
+  $("hz").textContent =
+    frequency.toFixed(0)+" Hz";
+
+  $("runtime").textContent =
+    Math.floor((d.now-startTime)/1000)+" s";
+
+  // Wizualizacja z góry
+  $("bike").style.transform =
+    `rotateZ(${d.shownRoll}deg)
+     rotateX(${d.shownPitch}deg)`;
+
+  $("debug").textContent =
+`ŻYROSKOP [°/s]
+X: ${d.gx.toFixed(2)}
+Y: ${d.gy.toFixed(2)}
+Z: ${d.gz.toFixed(2)}
+
+AKCELEROMETR [g]
+X: ${d.ax.toFixed(3)}
+Y: ${d.ay.toFixed(3)}
+Z: ${d.az.toFixed(3)}
+
+Moduł przyspieszenia:
+${d.magnitude.toFixed(3)} g
+
+Korekta:
+${d.gravityReliable ? "AKTYWNA" : "WSTRZYMANA"}
+
+Roll akcelerometru:
+${d.accelRoll.toFixed(2)}°
+
+Kalibracja:
+${calibrated ? "GOTOWA" :
+calibrationFrames+"/"+CALIBRATION_COUNT}`;
+
   drawChart();
-
-  count++;
-  show('count',count);
-  show('frames',count);
-  show('last',new Date().toLocaleTimeString());
-
-  hzCount++;
-  if(!hzTime) hzTime=now;
-
-  if(now-hzTime>=1000) {
-    show('hz',(hzCount*1000/(now-hzTime)).toFixed(0)+' Hz');
-    hzCount=0;
-    hzTime=now;
-  }
 }
+
+// ===== WYKRES =====
+
+const canvas = $("chart");
+const ctx = canvas.getContext("2d");
 
 function drawChart() {
-  const c=$('chart');
-  const ctx=c.getContext('2d');
-  const w=c.width,h=c.height;
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
 
-  ctx.clearRect(0,0,w,h);
-  ctx.strokeStyle='#475569';
-  ctx.lineWidth=1;
+  const dpr = window.devicePixelRatio || 1;
 
-  for(let i=0;i<5;i++) {
-    let y=i*h/4;
-    ctx.beginPath();
-    ctx.moveTo(0,y);
-    ctx.lineTo(w,y);
-    ctx.stroke();
+  if(canvas.width !== Math.round(width*dpr) ||
+     canvas.height !== Math.round(height*dpr)) {
+    canvas.width = Math.round(width*dpr);
+    canvas.height = Math.round(height*dpr);
   }
 
-  if(chartData.length<2) return;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,width,height);
 
-  const maxAbs=Math.max(45,...chartData.map(Math.abs));
-  ctx.strokeStyle='#38bdf8';
-  ctx.lineWidth=3;
+  const center = height/2;
+  const scale = height/180;
+
+  ctx.strokeStyle = "#40536a";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0,center);
+  ctx.lineTo(width,center);
+  ctx.stroke();
+
+  if(history.length < 2) return;
+
+  ctx.strokeStyle = "#46b6ff";
+  ctx.lineWidth = 2;
   ctx.beginPath();
 
-  chartData.forEach((v,i)=>{
-    const x=i/(119)*w;
-    const y=h/2-(v/maxAbs)*(h/2-8);
+  history.forEach((value,i) => {
+    const x = i/(HISTORY_LENGTH-1)*width;
+    const y = center-value*scale;
+
     if(i===0) ctx.moveTo(x,y);
     else ctx.lineTo(x,y);
   });
@@ -427,33 +669,57 @@ function drawChart() {
   ctx.stroke();
 }
 
-function reset() {
-  roll=0;
-  pitch=0;
-  yaw=0;
-  maxLeft=0;
-  maxRight=0;
-  chartData=[];
-  lastSample=0;
+// ===== STEROWANIE =====
 
-  show('roll','0.0');
-  show('roll2','0.0°');
-  show('pitch','0.0°');
-  show('yaw','0.0°');
-  show('maxLeft','0.0°');
-  show('maxRight','0.0°');
+function zero() {
+  zeroRoll = roll;
+  zeroPitch = pitch;
+  zeroYaw = yaw;
 
-  $('cube').style.transform='none';
-  drawChart();
+  maxLeft = 0;
+  maxRight = 0;
+  history = [];
 }
 
-$('connect').addEventListener('click',connect);
-$('disconnect').addEventListener('click',disconnect);
-$('reset').addEventListener('click',reset);
+$("zero").onclick = zero;
 
-if(!navigator.bluetooth) {
-  setStatus('Web Bluetooth niedostępny – otwórz w Bluefy');
+$("resetMax").onclick = () => {
+  maxLeft = 0;
+  maxRight = 0;
+};
+
+$("alpha").oninput = event => {
+  alpha = Number(event.target.value)/100;
+
+  $("alphaValue").textContent =
+    (alpha*100).toFixed(1)+"%";
+};
+
+$("accSign").onchange = event => {
+  accelSign = Number(event.target.value);
+};
+
+function resetState() {
+  roll = pitch = yaw = 0;
+  zeroRoll = zeroPitch = zeroYaw = 0;
+
+  maxLeft = maxRight = 0;
+  lastTime = 0;
+  frameCounter = 0;
+  frequency = 0;
+
+  startTime = performance.now();
+  lastHzTime = startTime;
+
+  history = [];
+  buffer = [];
+
+  calibrationFrames = 0;
+  calibrationRollSum = 0;
+  calibrationPitchSum = 0;
+  calibrated = false;
 }
+
 </script>
 </body>
 </html>
