@@ -204,8 +204,52 @@ body.cockpit-locked #cockpit .motion-help{display:none}
   #cockpit .cockpit-triangle{font-size:9px}
   #cockpit .cockpit-angle-navigation strong{font-size:clamp(48px,15vw,74px)}
 }
+
+/* ==========================================================
+   TRIKI MOTO 2.5.1 – PRZYCISKI POD KOKPITEM
+   Klasyczny | Reset maksimum | Siatka G
+   Wymiary i orientacja do łatwej edycji.
+   ========================================================== */
+#cockpit .cockpit-controls-row{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(0,1.65fr) minmax(0,1fr);
+ align-items:center;gap:clamp(5px,1.5vw,12px);
+ width:100%;max-width:650px;margin:10px auto 0;flex-shrink:0;
+}
+#cockpit .cockpit-controls-row button{min-width:0;max-width:100%;min-height:44px;padding:10px 5px;font-size:clamp(11px,2.5vw,15px);white-space:nowrap;touch-action:manipulation}
+#cockpit .cockpit-controls-row #resetMax{font-size:clamp(13px,3vw,18px);padding:10px 6px;min-height:48px}
+#cockpit .cockpit-view-btn{background:#102238;border-color:#233b54;color:#8ca9c2}
+#cockpit .cockpit-view-btn.selected{background:#173a58;border-color:#4d89b6;color:#e4f4ff}
+/* W trybie pełnoekranowym zawartość dopasowuje się do wysokości telefonu.
+   Zmniejszamy nie tylko siatkę, ale również nagłówek, marginesy i zegary. */
+body.cockpit-locked #cockpit{height:100dvh!important;min-height:0!important;justify-content:flex-start;gap:clamp(1px,.45dvh,5px);padding: max(7px,env(safe-area-inset-top)) 10px max(7px,env(safe-area-inset-bottom));overflow:hidden}
+body.cockpit-locked #cockpit .cockpit-top{min-height:26px;flex-shrink:0}
+body.cockpit-locked #cockpit .cockpit-title{margin:0;font-size:clamp(11px,1.7dvh,16px)}
+body.cockpit-locked #cockpit .quality-row{flex-shrink:0}
+body.cockpit-locked #cockpit .instrument-cluster{flex:1 1 auto;min-height:0;gap:clamp(2px,.8dvh,8px);padding:0;justify-content:space-evenly}
+body.cockpit-locked #cockpit .center-label{margin-bottom:0;font-size:10px}
+body.cockpit-locked #cockpit .angle-line strong{font-size:min(17vw,12dvh,88px);line-height:1.02}
+body.cockpit-locked #cockpit .center-display .side{font-size:11px}
+body.cockpit-locked #cockpit .motion-grid-panel{margin:0 auto}
+body.cockpit-locked #cockpit .motion-grid{width:min(58vw,23dvh,220px);margin:1px auto}
+body.cockpit-locked #cockpit .motion-readout{margin:2px 0;font-size:11px}
+body.cockpit-locked #cockpit .max-dials{margin:0 auto;gap:8px}
+body.cockpit-locked #cockpit .dial-arc{width:min(30vw,14dvh,125px)}
+body.cockpit-locked #cockpit .dial-label{font-size:10px;margin-bottom:1px}
+body.cockpit-locked #cockpit .cockpit-bottom{margin:0;padding-top:4px;flex-shrink:0}
+body.cockpit-locked #cockpit .cockpit-bottom strong{font-size:clamp(13px,2dvh,18px);margin-top:2px}
+body.cockpit-locked #cockpit .cockpit-note{display:none}
+body.cockpit-locked #cockpit .cockpit-controls-row{margin:2px auto 0;gap:5px}
+body.cockpit-locked #cockpit .cockpit-controls-row button{min-height:38px;padding:6px 3px;font-size:clamp(10px,2.7vw,13px)}
+body.cockpit-locked #cockpit .cockpit-controls-row #resetMax{min-height:38px;padding:6px 3px;font-size:clamp(11px,2.8vw,14px)}
+@media(max-height:620px){
+ body.cockpit-locked #cockpit .motion-grid{width:min(48vw,19dvh,155px)}
+ body.cockpit-locked #cockpit .dial-arc{width:min(25vw,11dvh,95px)}
+ body.cockpit-locked #cockpit .angle-line strong{font-size:min(14vw,10dvh,65px)}
+ body.cockpit-locked #cockpit .cockpit-bottom{padding-top:2px}
+}
 </style></head><body><main>
-<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.5.0</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
+<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.5.1</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
 <section class="card"><div class="row"><button class="primary" id="connect">Połącz Triki</button><button id="disconnect" disabled>Rozłącz</button><button id="zero" disabled>Wyzeruj pozycję</button></div><p id="status">Niepołączono</p><small id="calibration">Kalibracja żyroskopu rozpocznie się po połączeniu.</small></section>
 
 <div id="rideView">
@@ -216,11 +260,7 @@ body.cockpit-locked #cockpit .motion-help{display:none}
   <div class="quality-row"><span id="quality" class="pill">Brak danych</span></div>
 
   <div class="instrument-cluster">
-    <div class="center-display"><div class="center-label">AKTUALNY KĄT</div><div class="angle-line cockpit-angle-navigation" aria-label="Wybór wizualizacji">
-      <button type="button" id="classicVisual" class="cockpit-triangle cockpit-triangle-left selected" aria-pressed="true" aria-label="Widok klasyczny"><span>Klasyczny</span></button>
-      <strong id="bigRoll">0.0°</strong>
-      <button type="button" id="gridVisual" class="cockpit-triangle cockpit-triangle-right" aria-pressed="false" aria-label="Widok Siatka G"><span>Siatka G</span></button>
-    </div><div class="side" id="side">PION</div><div id="classicLeanScale" class="lean-scale"><span>LEWO</span><div class="scale-track"><i class="scale-center"></i><i id="leanMarker" class="scale-marker"></i></div><span>PRAWO</span></div>
+    <div class="center-display"><div class="center-label">AKTUALNY KĄT</div><div class="angle-line"><strong id="bigRoll">0.0°</strong></div><div class="side" id="side">PION</div><div id="classicLeanScale" class="lean-scale"><span>LEWO</span><div class="scale-track"><i class="scale-center"></i><i id="leanMarker" class="scale-marker"></i></div><span>PRAWO</span></div>
       <div id="motionGridPanel" class="motion-grid-panel hidden">
         <div class="motion-grid" role="img" aria-label="Poziomo: przechył motocykla; pionowo: przyspieszenie i hamowanie">
           <span class="axis-label axis-top">PRZYSPIESZANIE</span>
@@ -240,8 +280,10 @@ body.cockpit-locked #cockpit .motion-help{display:none}
   </div>
   <div class="cockpit-bottom"><div><span>LEWO</span><strong id="left">0.0°</strong></div><div><span>ROLL</span><strong id="roll">0.0°</strong></div><div><span>PRAWO</span><strong id="right">0.0°</strong></div><div><span>CZAS SESJI</span><strong id="runtime">0 s</strong></div></div>
   <p class="cockpit-note">Wskazania orientacyjne · skala przechyłu ±60°</p>
-  <div class="cockpit-reset-row">
+  <div class="cockpit-controls-row" aria-label="Sterowanie kokpitem">
+    <button type="button" id="classicVisual" class="cockpit-view-btn selected" aria-pressed="true">Klasyczny</button>
     <button type="button" id="resetMax">Reset maksimum</button>
+    <button type="button" id="gridVisual" class="cockpit-view-btn" aria-pressed="false">Siatka G</button>
   </div>
 </section>
 </div>
@@ -298,7 +340,7 @@ const gx=raw[0]-gyroBias[0],gy=raw[1]-gyroBias[1],gz=raw[2]-gyroBias[2];const co
 // Odczyt jest przybliżeniem: filtr orientacji może być zaburzany w zakrętach.
 const [qw,qx,qy,qz]=q;
 const gravityX=2*(qx*qz-qw*qy);
-const longitudinalG=ax-gravityX;
+const longitudinalG=gravityX-ax; // Odwrócona oś: przyspieszanie ma przesuwać punkt w górę
 const smoothing=1-Math.exp(-dt/0.22);
 longitudinalFiltered+=smoothing*(longitudinalG-longitudinalFiltered);
 const e=getEuler();roll=-e[1];pitch=e[0];yaw=e[2];const shownRoll=roll-zeroRoll,shownPitch=pitch-zeroPitch,shownYaw=((yaw-zeroYaw+180)%360+360)%360-180;
@@ -367,7 +409,7 @@ Próbki CSV: ${records.length}`}
 $('zero').onclick=()=>{if(!calibrated)return;zeroRoll=roll;zeroPitch=pitch;zeroYaw=yaw;longitudinalFiltered=0;maxLeft=maxRight=0;status('Pozycja wyzerowana')};$('resetMax').onclick=()=>{maxLeft=maxRight=0};$('kp').oninput=e=>{kp=Number(e.target.value);$('kpValue').textContent=kp.toFixed(2)};
 $('rideTab').onclick=()=>{ $('rideView').classList.remove('hidden');$('diagView').classList.add('hidden');$('rideTab').classList.add('primary');$('diagTab').classList.remove('primary')};$('diagTab').onclick=()=>{$('diagView').classList.remove('hidden');$('rideView').classList.add('hidden');$('diagTab').classList.add('primary');$('rideTab').classList.remove('primary')};
 function updateRecordUI(){$('record').textContent=recording?'Zatrzymaj zapis':'Rozpocznij zapis';$('record').disabled=!calibrated||records.length>=MAX_RECORDS;$('export').disabled=records.length===0;$('recordInfo').textContent=records.length+' próbek · '+(recording?'zapis aktywny':'zapis wyłączony')}
-$('record').onclick=()=>{if(!calibrated)return;recording=!recording;lastRecordAt=0;updateRecordUI()};$('clear').onclick=()=>{if(recording){status('Zatrzymaj zapis przed wyczyszczeniem');return}records=[];updateRecordUI()};$('export').onclick=()=>{if(!records.length)return;const header='timestamp_iso,elapsed_s,roll_deg,pitch_deg,yaw_deg,gx_dps,gy_dps,gz_dps,ax_g,ay_g,az_g,acc_magnitude_g,acc_correction,still_condition';const csv=[header,...records.map(row=>row.join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='triki_moto_2_3_'+new Date().toISOString().replace(/[:.]/g,'-')+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000)};
+$('record').onclick=()=>{if(!calibrated)return;recording=!recording;lastRecordAt=0;updateRecordUI()};$('clear').onclick=()=>{if(recording){status('Zatrzymaj zapis przed wyczyszczeniem');return}records=[];updateRecordUI()};$('export').onclick=()=>{if(!records.length)return;const header='timestamp_iso,elapsed_s,roll_deg,pitch_deg,yaw_deg,gx_dps,gy_dps,gz_dps,ax_g,ay_g,az_g,acc_magnitude_g,acc_correction,still_condition';const csv=[header,...records.map(row=>row.join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='triki_moto_2_5_1_'+new Date().toISOString().replace(/[:.]/g,'-')+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000)};
 
 // ===== KOKPIT PEŁNOEKRANOWY =====
 const cockpitElement=$('cockpit');
