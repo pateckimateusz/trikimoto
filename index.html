@@ -1,295 +1,459 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Triki IMU Monitor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Triki Moto 2.0</title>
 
 <style>
-  body {
-    margin: 0;
-    padding: 20px;
-    background: #10151d;
-    color: white;
-    font-family: Arial, sans-serif;
-  }
-
-  h1 { text-align: center; }
-
-  .panel {
-    background: #202936;
-    padding: 18px;
-    margin: 15px 0;
-    border-radius: 14px;
-  }
-
-  .value {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .axis {
-    background: #303d4d;
-    padding: 12px;
-    border-radius: 10px;
-    text-align: center;
-  }
-
-  .number {
-    font-size: 25px;
-    font-weight: bold;
-    margin-top: 8px;
-  }
-
-  button {
-    width: 100%;
-    padding: 16px;
-    margin: 6px 0;
-    border: none;
-    border-radius: 10px;
-    font-size: 17px;
-    font-weight: bold;
-    background: #2785ee;
-    color: white;
-  }
-
-  button:disabled { opacity: 0.4; }
-
-  .status {
-    text-align: center;
-    color: #ffc857;
-    padding: 10px;
-  }
-
-  small { color: #aebccc; }
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  padding:16px;
+  background:#10151d;
+  color:#f1f5f9;
+  font-family:Arial,sans-serif;
+}
+h1 { text-align:center; margin:8px 0 4px; }
+.subtitle { text-align:center;color:#94a3b8;font-size:12px; }
+.panel {
+  background:#1e2937;
+  border:1px solid #334155;
+  border-radius:15px;
+  padding:15px;
+  margin:14px 0;
+}
+button {
+  background:#287bea;
+  color:white;
+  border:0;
+  border-radius:10px;
+  padding:14px;
+  font-size:15px;
+  font-weight:bold;
+  width:100%;
+  margin:5px 0;
+}
+button.secondary { background:#475569; }
+button:disabled { opacity:.4; }
+.status { text-align:center;color:#fbbf24;padding:8px; }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.metric {
+  background:#111c29;
+  border-radius:10px;
+  padding:12px 5px;
+  text-align:center;
+}
+.metric small { color:#94a3b8;font-size:11px; }
+.metric strong {
+  display:block;
+  font-size:25px;
+  margin-top:7px;
+  font-variant-numeric:tabular-nums;
+}
+.lean {
+  text-align:center;
+  font-size:55px;
+  font-weight:bold;
+  margin:10px 0;
+  font-variant-numeric:tabular-nums;
+}
+.lean small { font-size:14px;color:#94a3b8; }
+.scene {
+  height:190px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  perspective:600px;
+  overflow:hidden;
+}
+.cube {
+  width:110px;
+  height:110px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .04s linear;
+}
+.face {
+  position:absolute;
+  width:110px;
+  height:110px;
+  border:2px solid #7dd3fc;
+  background:rgba(14,116,144,.65);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:bold;
+  font-size:16px;
+  backface-visibility:visible;
+}
+.front { transform:translateZ(55px); }
+.back { transform:rotateY(180deg) translateZ(55px); }
+.right { transform:rotateY(90deg) translateZ(55px); }
+.left { transform:rotateY(-90deg) translateZ(55px); }
+.top { transform:rotateX(90deg) translateZ(55px);background:rgba(34,197,94,.65); }
+.bottom { transform:rotateX(-90deg) translateZ(55px); }
+canvas { width:100%;height:120px; }
+.row { display:flex;justify-content:space-between;gap:10px;margin:8px 0; }
+.muted { color:#94a3b8;font-size:12px; }
 </style>
 </head>
 
 <body>
 
-<h1>TRIKI IMU MONITOR</h1>
+<h1>TRIKI MOTO</h1>
+<div class="subtitle">Motorcycle IMU Monitor · Version 2.0</div>
 
 <div class="panel">
   <div id="status" class="status">Rozłączono</div>
   <button id="connect">POŁĄCZ Z TRIKI</button>
-  <button id="disconnect" disabled>ROZŁĄCZ</button>
+  <button id="disconnect" class="secondary" disabled>ROZŁĄCZ</button>
 </div>
 
 <div class="panel">
-  <h2>Żyroskop</h2>
-  <small>Prędkość obrotowa – stopnie/s</small>
-  <div class="value">
-    <div class="axis">X<div id="gx" class="number">0</div></div>
-    <div class="axis">Y<div id="gy" class="number">0</div></div>
-    <div class="axis">Z<div id="gz" class="number">0</div></div>
+  <h3 style="text-align:center">KĄT PRZECHYŁU</h3>
+  <div class="lean"><span id="roll">0.0</span><small>°</small></div>
+  <div class="grid">
+    <div class="metric">
+      <small>ROLL</small>
+      <strong id="roll2">0°</strong>
+    </div>
+    <div class="metric">
+      <small>PITCH</small>
+      <strong id="pitch">0°</strong>
+    </div>
+    <div class="metric">
+      <small>YAW</small>
+      <strong id="yaw">0°</strong>
+    </div>
   </div>
 </div>
 
 <div class="panel">
-  <h2>Akcelerometr</h2>
-  <small>Przyspieszenie – g</small>
-  <div class="value">
-    <div class="axis">X<div id="ax" class="number">0</div></div>
-    <div class="axis">Y<div id="ay" class="number">0</div></div>
-    <div class="axis">Z<div id="az" class="number">0</div></div>
+  <h3 style="text-align:center">ORIENTACJA 3D</h3>
+  <div class="scene">
+    <div id="cube" class="cube">
+      <div class="face front">PRZÓD</div>
+      <div class="face back">TYŁ</div>
+      <div class="face right">PRAWO</div>
+      <div class="face left">LEWO</div>
+      <div class="face top">TRIKI</div>
+      <div class="face bottom">DÓŁ</div>
+    </div>
+  </div>
+  <div class="muted" style="text-align:center">
+    Model poglądowy – orientacja według osi czujnika
   </div>
 </div>
 
 <div class="panel">
-  <h2>Dane diagnostyczne</h2>
-  <div>Odebrane ramki: <b id="frames">0</b></div>
-  <div>Ostatnia ramka: <b id="last">-</b></div>
+  <h3>MAKSYMALNE WYCHYLENIE</h3>
+  <div class="grid">
+    <div class="metric">
+      <small>LEWO</small>
+      <strong id="maxLeft">0°</strong>
+    </div>
+    <div class="metric">
+      <small>PRAWO</small>
+      <strong id="maxRight">0°</strong>
+    </div>
+    <div class="metric">
+      <small>PRÓBKI</small>
+      <strong id="frames">0</strong>
+    </div>
+  </div>
+  <button id="reset" class="secondary">ZERUJ POZYCJĘ I REKORDY</button>
+</div>
+
+<div class="panel">
+  <h3>WYKRES PRZECHYŁU</h3>
+  <canvas id="chart" width="600" height="180"></canvas>
+</div>
+
+<div class="panel">
+  <h3>ŻYROSKOP – °/s</h3>
+  <div class="grid">
+    <div class="metric"><small>X</small><strong id="gx">0</strong></div>
+    <div class="metric"><small>Y</small><strong id="gy">0</strong></div>
+    <div class="metric"><small>Z</small><strong id="gz">0</strong></div>
+  </div>
+</div>
+
+<div class="panel">
+  <h3>AKCELEROMETR – g</h3>
+  <div class="grid">
+    <div class="metric"><small>X</small><strong id="ax">0</strong></div>
+    <div class="metric"><small>Y</small><strong id="ay">0</strong></div>
+    <div class="metric"><small>Z</small><strong id="az">0</strong></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="row"><span class="muted">Odebrane ramki</span><b id="count">0</b></div>
+  <div class="row"><span class="muted">Ostatni pomiar</span><b id="last">-</b></div>
+  <div class="row"><span class="muted">Częstotliwość</span><b id="hz">0 Hz</b></div>
+  <div class="muted">
+    Kąty w tej wersji są obliczane przez całkowanie żyroskopu.
+    Akcelerometr jest wyświetlany diagnostycznie.
+    Nie jest to jeszcze skorygowany pomiar rzeczywistego
+    przechyłu motocykla.
+  </div>
 </div>
 
 <script>
-const SERVICE =
-  '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const RX='6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+const TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 
-const RX =
-  '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
-
-const TX =
-  '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
-
-const START_COMMAND = new Uint8Array([
-  0x20, 0x10, 0x00, 0xD0,
-  0x07, 0x68, 0x00, 0x03
+const START=new Uint8Array([
+  0x20,0x10,0x00,0xD0,0x07,0x68,0x00,0x03
 ]);
 
-let device = null;
-let txCharacteristic = null;
-let buffer = new Uint8Array(0);
-let frameCount = 0;
+let device=null, rx=null, tx=null;
+let buffer=new Uint8Array(0);
+let count=0, lastTime=0, hzCount=0, hzTime=0;
 
-const $ = id => document.getElementById(id);
+let roll=0, pitch=0, yaw=0;
+let maxLeft=0, maxRight=0;
+let lastSample=0;
+let chartData=[];
 
-function status(message) {
-  $('status').textContent = message;
+const $=id=>document.getElementById(id);
+const RAD=180/Math.PI;
+
+function show(id,value) {
+  $(id).textContent=value;
 }
 
-function display(id, value) {
-  $(id).textContent = value.toFixed(2);
+function setStatus(s) {
+  show('status',s);
 }
 
 async function connect() {
   try {
-    status('Wyszukiwanie Triki...');
+    setStatus('Wyszukiwanie Triki...');
 
-    device = await navigator.bluetooth.requestDevice({
-      filters: [{ namePrefix: 'Triki' }],
-      optionalServices: [SERVICE]
+    device=await navigator.bluetooth.requestDevice({
+      filters:[{namePrefix:'Triki'}],
+      optionalServices:[SERVICE]
     });
 
-    device.addEventListener(
-      'gattserverdisconnected',
-      disconnected
-    );
+    device.addEventListener('gattserverdisconnected',onDisconnect);
 
-    status('Łączenie...');
+    const server=await device.gatt.connect();
+    const service=await server.getPrimaryService(SERVICE);
 
-    const server = await device.gatt.connect();
-    const service = await server.getPrimaryService(SERVICE);
+    rx=await service.getCharacteristic(RX);
+    tx=await service.getCharacteristic(TX);
 
-    const rx = await service.getCharacteristic(RX);
-    txCharacteristic = await service.getCharacteristic(TX);
+    await tx.startNotifications();
+    tx.addEventListener('characteristicvaluechanged',onData);
 
-    await txCharacteristic.startNotifications();
-
-    txCharacteristic.addEventListener(
-      'characteristicvaluechanged',
-      onData
-    );
-
-    if (rx.properties.writeWithoutResponse) {
-      await rx.writeValueWithoutResponse(START_COMMAND);
+    if(rx.properties.writeWithoutResponse) {
+      await rx.writeValueWithoutResponse(START);
     } else {
-      await rx.writeValue(START_COMMAND);
+      await rx.writeValue(START);
     }
 
-    buffer = new Uint8Array(0);
-    frameCount = 0;
-    $('frames').textContent = '0';
+    buffer=new Uint8Array(0);
+    count=0;
+    lastSample=0;
 
-    $('connect').disabled = true;
-    $('disconnect').disabled = false;
+    $('connect').disabled=true;
+    $('disconnect').disabled=false;
 
-    status('POŁĄCZONO – odbieranie danych');
+    setStatus('POŁĄCZONO – POMIAR AKTYWNY');
 
-  } catch (error) {
-    status('Błąd: ' + error.message);
-    console.error(error);
+  } catch(e) {
+    setStatus('Błąd: '+e.message);
+    console.error(e);
   }
 }
 
-function disconnected() {
-  status('Rozłączono');
-  $('connect').disabled = false;
-  $('disconnect').disabled = true;
-  txCharacteristic = null;
+function onDisconnect() {
+  setStatus('Rozłączono');
+  $('connect').disabled=false;
+  $('disconnect').disabled=true;
+  rx=null;
+  tx=null;
 }
 
-async function disconnect() {
-  if (device && device.gatt.connected) {
-    device.gatt.disconnect();
-  }
-  disconnected();
+function disconnect() {
+  if(device && device.gatt.connected) device.gatt.disconnect();
+  else onDisconnect();
 }
 
 function onData(event) {
-  const incoming = new Uint8Array(
-    event.target.value.buffer,
-    event.target.value.byteOffset,
-    event.target.value.byteLength
-  );
+  const d=event.target.value;
+  const incoming=new Uint8Array(d.buffer,d.byteOffset,d.byteLength);
 
-  // Sklejanie fragmentów BLE w jeden strumień
-  const joined = new Uint8Array(
-    buffer.length + incoming.length
-  );
-
+  const joined=new Uint8Array(buffer.length+incoming.length);
   joined.set(buffer);
-  joined.set(incoming, buffer.length);
-  buffer = joined;
+  joined.set(incoming,buffer.length);
+  buffer=joined;
 
-  // Jedna ramka ma 14 bajtów
-  while (buffer.length >= 14) {
+  while(buffer.length>=14) {
+    let h=-1;
 
-    // Szukanie nagłówka 0x22, status 0 lub 1
-    let header = -1;
-
-    for (let i = 0; i <= buffer.length - 2; i++) {
-      if (
-        buffer[i] === 0x22 &&
-        (buffer[i + 1] === 0x00 ||
-         buffer[i + 1] === 0x01)
-      ) {
-        header = i;
+    for(let i=0;i<=buffer.length-2;i++) {
+      if(buffer[i]===0x22 &&
+        (buffer[i+1]===0x00 || buffer[i+1]===0x01)) {
+        h=i;
         break;
       }
     }
 
-    if (header === -1) {
-      buffer = buffer.slice(-1);
+    if(h<0) {
+      buffer=buffer.slice(-1);
       return;
     }
 
-    if (header > 0) {
-      buffer = buffer.slice(header);
-    }
+    if(h>0) buffer=buffer.slice(h);
+    if(buffer.length<14) return;
 
-    if (buffer.length < 14) return;
+    const v=new DataView(buffer.buffer,buffer.byteOffset,14);
+    const raw=[];
 
-    const view = new DataView(
-      buffer.buffer,
-      buffer.byteOffset,
-      14
-    );
+    for(let i=0;i<6;i++) raw.push(v.getInt16(2+i*2,true));
 
-    const raw = [];
-    for (let i = 0; i < 6; i++) {
-      raw.push(view.getInt16(2 + i * 2, true));
-    }
-
-    processFrame(raw);
-
-    buffer = buffer.slice(14);
+    process(raw);
+    buffer=buffer.slice(14);
   }
 }
 
-function processFrame(v) {
-  // Skale robocze LSM6DSL.
-  // Weryfikujemy je eksperymentalnie.
-  const gyro = v.slice(0, 3).map(x => x / 14.286);
-  const accel = v.slice(3, 6).map(x => x / 2048);
+function process(v) {
+  const now=performance.now();
+  let dt=lastSample ? (now-lastSample)/1000 : 0;
+  lastSample=now;
 
-  display('gx', gyro[0]);
-  display('gy', gyro[1]);
-  display('gz', gyro[2]);
+  // Odrzucenie dużej przerwy po utracie połączenia.
+  dt=Math.min(dt,0.05);
 
-  display('ax', accel[0]);
-  display('ay', accel[1]);
-  display('az', accel[2]);
+  // LSM6DSL: zakres żyroskopu ±2000°/s
+  // i akcelerometru ±16g.
+  const gx=v[0]/14.286;
+  const gy=v[1]/14.286;
+  const gz=v[2]/14.286;
 
-  frameCount++;
-  $('frames').textContent = frameCount;
-  $('last').textContent = new Date().toLocaleTimeString();
+  const ax=v[3]/2048;
+  const ay=v[4]/2048;
+  const az=v[5]/2048;
 
-  console.log({
-    gyroRaw: v.slice(0, 3),
-    accelRaw: v.slice(3, 6),
-    gyro,
-    accel
-  });
+  // Na podstawie testów orientacji Twojego Triki:
+  // Y = przechył lewo/prawo
+  // X = pochylenie przód/tył
+  // Z = obrót wokół osi pionowej
+  roll+=gy*dt;
+  pitch+=gx*dt;
+  yaw+=gz*dt;
+
+  show('roll',roll.toFixed(1));
+  show('roll2',roll.toFixed(1)+'°');
+  show('pitch',pitch.toFixed(1)+'°');
+  show('yaw',yaw.toFixed(1)+'°');
+
+  show('gx',gx.toFixed(1));
+  show('gy',gy.toFixed(1));
+  show('gz',gz.toFixed(1));
+
+  show('ax',ax.toFixed(2));
+  show('ay',ay.toFixed(2));
+  show('az',az.toFixed(2));
+
+  if(roll<maxLeft) maxLeft=roll;
+  if(roll>maxRight) maxRight=roll;
+
+  show('maxLeft',maxLeft.toFixed(1)+'°');
+  show('maxRight',maxRight.toFixed(1)+'°');
+
+  $('cube').style.transform=
+    `rotateX(${pitch}deg) rotateY(${roll}deg) rotateZ(${yaw}deg)`;
+
+  chartData.push(roll);
+  if(chartData.length>120) chartData.shift();
+  drawChart();
+
+  count++;
+  show('count',count);
+  show('frames',count);
+  show('last',new Date().toLocaleTimeString());
+
+  hzCount++;
+  if(!hzTime) hzTime=now;
+
+  if(now-hzTime>=1000) {
+    show('hz',(hzCount*1000/(now-hzTime)).toFixed(0)+' Hz');
+    hzCount=0;
+    hzTime=now;
+  }
 }
 
-$('connect').addEventListener('click', connect);
-$('disconnect').addEventListener('click', disconnect);
+function drawChart() {
+  const c=$('chart');
+  const ctx=c.getContext('2d');
+  const w=c.width,h=c.height;
 
-if (!navigator.bluetooth) {
-  status('Ta przeglądarka nie udostępnia Web Bluetooth');
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='#475569';
+  ctx.lineWidth=1;
+
+  for(let i=0;i<5;i++) {
+    let y=i*h/4;
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(w,y);
+    ctx.stroke();
+  }
+
+  if(chartData.length<2) return;
+
+  const maxAbs=Math.max(45,...chartData.map(Math.abs));
+  ctx.strokeStyle='#38bdf8';
+  ctx.lineWidth=3;
+  ctx.beginPath();
+
+  chartData.forEach((v,i)=>{
+    const x=i/(119)*w;
+    const y=h/2-(v/maxAbs)*(h/2-8);
+    if(i===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  });
+
+  ctx.stroke();
+}
+
+function reset() {
+  roll=0;
+  pitch=0;
+  yaw=0;
+  maxLeft=0;
+  maxRight=0;
+  chartData=[];
+  lastSample=0;
+
+  show('roll','0.0');
+  show('roll2','0.0°');
+  show('pitch','0.0°');
+  show('yaw','0.0°');
+  show('maxLeft','0.0°');
+  show('maxRight','0.0°');
+
+  $('cube').style.transform='none';
+  drawChart();
+}
+
+$('connect').addEventListener('click',connect);
+$('disconnect').addEventListener('click',disconnect);
+$('reset').addEventListener('click',reset);
+
+if(!navigator.bluetooth) {
+  setStatus('Web Bluetooth niedostępny – otwórz w Bluefy');
 }
 </script>
-
 </body>
 </html>
