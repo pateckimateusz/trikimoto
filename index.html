@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triki IMU Monitor</title>
+
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background: #10151d;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+
+  h1 { text-align: center; }
+
+  .panel {
+    background: #202936;
+    padding: 18px;
+    margin: 15px 0;
+    border-radius: 14px;
+  }
+
+  .value {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .axis {
+    background: #303d4d;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .number {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+
+  button {
+    width: 100%;
+    padding: 16px;
+    margin: 6px 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    background: #2785ee;
+    color: white;
+  }
+
+  button:disabled { opacity: 0.4; }
+
+  .status {
+    text-align: center;
+    color: #ffc857;
+    padding: 10px;
+  }
+
+  small { color: #aebccc; }
+</style>
+</head>
+
+<body>
+
+<h1>TRIKI IMU MONITOR</h1>
+
+<div class="panel">
+  <div id="status" class="status">Rozłączono</div>
+  <button id="connect">POŁĄCZ Z TRIKI</button>
+  <button id="disconnect" disabled>ROZŁĄCZ</button>
+</div>
+
+<div class="panel">
+  <h2>Żyroskop</h2>
+  <small>Prędkość obrotowa – stopnie/s</small>
+  <div class="value">
+    <div class="axis">X<div id="gx" class="number">0</div></div>
+    <div class="axis">Y<div id="gy" class="number">0</div></div>
+    <div class="axis">Z<div id="gz" class="number">0</div></div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Akcelerometr</h2>
+  <small>Przyspieszenie – g</small>
+  <div class="value">
+    <div class="axis">X<div id="ax" class="number">0</div></div>
+    <div class="axis">Y<div id="ay" class="number">0</div></div>
+    <div class="axis">Z<div id="az" class="number">0</div></div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2>Dane diagnostyczne</h2>
+  <div>Odebrane ramki: <b id="frames">0</b></div>
+  <div>Ostatnia ramka: <b id="last">-</b></div>
+</div>
+
+<script>
+const SERVICE =
+  '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+
+const RX =
+  '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+
+const TX =
+  '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+
+const START_COMMAND = new Uint8Array([
+  0x20, 0x10, 0x00, 0xD0,
+  0x07, 0x68, 0x00, 0x03
+]);
+
+let device = null;
+let txCharacteristic = null;
+let buffer = new Uint8Array(0);
+let frameCount = 0;
+
+const $ = id => document.getElementById(id);
+
+function status(message) {
+  $('status').textContent = message;
+}
+
+function display(id, value) {
+  $(id).textContent = value.toFixed(2);
+}
+
+async function connect() {
+  try {
+    status('Wyszukiwanie Triki...');
+
+    device = await navigator.bluetooth.requestDevice({
+      filters: [{ namePrefix: 'Triki' }],
+      optionalServices: [SERVICE]
+    });
+
+    device.addEventListener(
+      'gattserverdisconnected',
+      disconnected
+    );
+
+    status('Łączenie...');
+
+    const server = await device.gatt.connect();
+    const service = await server.getPrimaryService(SERVICE);
+
+    const rx = await service.getCharacteristic(RX);
+    txCharacteristic = await service.getCharacteristic(TX);
+
+    await txCharacteristic.startNotifications();
+
+    txCharacteristic.addEventListener(
+      'characteristicvaluechanged',
+      onData
+    );
+
+    if (rx.properties.writeWithoutResponse) {
+      await rx.writeValueWithoutResponse(START_COMMAND);
+    } else {
+      await rx.writeValue(START_COMMAND);
+    }
+
+    buffer = new Uint8Array(0);
+    frameCount = 0;
+    $('frames').textContent = '0';
+
+    $('connect').disabled = true;
+    $('disconnect').disabled = false;
+
+    status('POŁĄCZONO – odbieranie danych');
+
+  } catch (error) {
+    status('Błąd: ' + error.message);
+    console.error(error);
+  }
+}
+
+function disconnected() {
+  status('Rozłączono');
+  $('connect').disabled = false;
+  $('disconnect').disabled = true;
+  txCharacteristic = null;
+}
+
+async function disconnect() {
+  if (device && device.gatt.connected) {
+    device.gatt.disconnect();
+  }
+  disconnected();
+}
+
+function onData(event) {
+  const incoming = new Uint8Array(
+    event.target.value.buffer,
+    event.target.value.byteOffset,
+    event.target.value.byteLength
+  );
+
+  // Sklejanie fragmentów BLE w jeden strumień
+  const joined = new Uint8Array(
+    buffer.length + incoming.length
+  );
+
+  joined.set(buffer);
+  joined.set(incoming, buffer.length);
+  buffer = joined;
+
+  // Jedna ramka ma 14 bajtów
+  while (buffer.length >= 14) {
+
+    // Szukanie nagłówka 0x22, status 0 lub 1
+    let header = -1;
+
+    for (let i = 0; i <= buffer.length - 2; i++) {
+      if (
+        buffer[i] === 0x22 &&
+        (buffer[i + 1] === 0x00 ||
+         buffer[i + 1] === 0x01)
+      ) {
+        header = i;
+        break;
+      }
+    }
+
+    if (header === -1) {
+      buffer = buffer.slice(-1);
+      return;
+    }
+
+    if (header > 0) {
+      buffer = buffer.slice(header);
+    }
+
+    if (buffer.length < 14) return;
+
+    const view = new DataView(
+      buffer.buffer,
+      buffer.byteOffset,
+      14
+    );
+
+    const raw = [];
+    for (let i = 0; i < 6; i++) {
+      raw.push(view.getInt16(2 + i * 2, true));
+    }
+
+    processFrame(raw);
+
+    buffer = buffer.slice(14);
+  }
+}
+
+function processFrame(v) {
+  // Skale robocze LSM6DSL.
+  // Weryfikujemy je eksperymentalnie.
+  const gyro = v.slice(0, 3).map(x => x / 14.286);
+  const accel = v.slice(3, 6).map(x => x / 2048);
+
+  display('gx', gyro[0]);
+  display('gy', gyro[1]);
+  display('gz', gyro[2]);
+
+  display('ax', accel[0]);
+  display('ay', accel[1]);
+  display('az', accel[2]);
+
+  frameCount++;
+  $('frames').textContent = frameCount;
+  $('last').textContent = new Date().toLocaleTimeString();
+
+  console.log({
+    gyroRaw: v.slice(0, 3),
+    accelRaw: v.slice(3, 6),
+    gyro,
+    accel
+  });
+}
+
+$('connect').addEventListener('click', connect);
+$('disconnect').addEventListener('click', disconnect);
+
+if (!navigator.bluetooth) {
+  status('Ta przeglądarka nie udostępnia Web Bluetooth');
+}
+</script>
+
+</body>
+</html>
