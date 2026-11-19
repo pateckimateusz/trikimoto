@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Triki Moto 2.4.2 · Cockpit</title>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Triki Moto 2.4.6 · Cockpit</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1019;--panel:#172131;--line:#304158;--text:#edf5ff;--muted:#a6b7ca;--blue:#4dbbff;--green:#55dca7;--amber:#ffd37a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}main{max-width:850px;margin:auto;padding:14px}h1{font-size:25px;margin:4px 0}h2{font-size:17px;margin:0 0 12px}.muted,small{color:var(--muted)}.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:16px;margin:13px 0}.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}button{background:#283c53;color:white;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit}button.primary{background:#087cc5;border-color:#087cc5}button:disabled{opacity:.45}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{background:#101a28;border-radius:12px;padding:13px 5px;text-align:center}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:clamp(18px,5vw,30px);font-variant-numeric:tabular-nums;margin-top:5px}.hero{text-align:center;padding:18px 0}.hero strong{display:block;font-size:clamp(64px,17vw,115px);font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums}.hero .side{font-size:18px;color:var(--blue)}.track{height:9px;background:#26374b;border-radius:9px;overflow:hidden}.track>div{height:100%;background:var(--blue);width:0%}canvas{width:100%;height:170px;display:block}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;color:#c2dcf4;line-height:1.55}.hidden{display:none!important}label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}input[type=range]{width:100%}.pill{display:inline-block;padding:5px 10px;border:1px solid var(--line);border-radius:20px;font-size:13px}.warning{color:var(--amber)}.good{color:var(--green)}@media(max-width:420px){main{padding:9px}.card{padding:12px}button{padding:10px}}
 .quality-row{width:100%;min-height:36px;display:flex;align-items:center;justify-content:center;margin:4px 0 10px}.quality-row .pill{display:block;width:100%;text-align:center;white-space:normal;line-height:20px;min-height:32px}
@@ -74,8 +74,38 @@ body.cockpit-locked #cockpit .angle-line strong{font-size:clamp(52px,16vw,110px)
 body.cockpit-locked #cockpit .cockpit-bottom{flex-shrink:0}
 body.cockpit-locked #cockpit .cockpit-note{margin:5px 0 0}
 @media(max-height:690px){body.cockpit-locked #cockpit{padding-top:10px;padding-bottom:10px;justify-content:space-between}body.cockpit-locked #cockpit .instrument-cluster{gap:0}body.cockpit-locked #cockpit .dial-arc{width:min(27vw,110px);height:min(27vw,110px)}body.cockpit-locked #cockpit .cockpit-bottom{padding-top:6px;margin-top:3px}body.cockpit-locked #cockpit .cockpit-note{display:none}}
+
+/* =======================================================
+   RESET MAKSYMALNYCH PRZECHYLÓW – POŁOŻENIE I WYMIARY
+   Przycisk na samym dole boxa TRIKI / LIVE COCKPIT.
+   150% bazowego przycisku (font 15 -> 22.5px,
+   padding pionowy 11 -> 16.5px, poziomy 13 -> 19.5px).
+   ======================================================= */
+.cockpit-reset-row{
+  display:flex;
+  justify-content:center; /* ORIENTACJA: środek w poziomie */
+  align-items:center;
+  width:100%;
+  margin-top:14px;
+  flex-shrink:0;
+}
+#resetMax{
+  font-size:22.5px; /* 150% rozmiaru czcionki */
+  padding:16.5px 19.5px; /* 150% standardowego paddingu */
+  min-height:60px;
+  max-width:100%;
+  text-align:center;
+  touch-action:manipulation;
+}
+body.cockpit-locked #cockpit .cockpit-reset-row{
+  margin-top:8px;
+}
+@media(max-height:690px){
+ body.cockpit-locked #resetMax{font-size:18px;padding:11px 16px;min-height:45px}
+ body.cockpit-locked #cockpit .cockpit-reset-row{margin-top:3px}
+}
 </style></head><body><main>
-<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.4.2</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
+<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.4.6</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
 <section class="card"><div class="row"><button class="primary" id="connect">Połącz Triki</button><button id="disconnect" disabled>Rozłącz</button><button id="zero" disabled>Wyzeruj pozycję</button></div><p id="status">Niepołączono</p><small id="calibration">Kalibracja żyroskopu rozpocznie się po połączeniu.</small></section>
 
 <div id="rideView">
@@ -93,8 +123,10 @@ body.cockpit-locked #cockpit .cockpit-note{margin:5px 0 0}
   </div>
   <div class="cockpit-bottom"><div><span>LEWO</span><strong id="left">0.0°</strong></div><div><span>ROLL</span><strong id="roll">0.0°</strong></div><div><span>PRAWO</span><strong id="right">0.0°</strong></div><div><span>CZAS SESJI</span><strong id="runtime">0 s</strong></div></div>
   <p class="cockpit-note">Wskazania orientacyjne · skala przechyłu ±60°</p>
+  <div class="cockpit-reset-row">
+    <button type="button" id="resetMax">Reset maksimum</button>
+  </div>
 </section>
-<section class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Maksymalne przechyły</h2><button id="resetMax">Reset maksimum</button></div></section>
 </div>
 <div id="diagView" class="hidden">
 <section class="card"><h2>Orientacja i diagnostyka</h2><div class="grid"><div class="metric"><span>Pitch</span><strong id="pitch">0.0°</strong></div><div class="metric"><span>Yaw względny</span><strong id="yaw">0.0°</strong></div><div class="metric"><span>Odczyt</span><strong id="hz">0 Hz</strong></div></div><p class="muted"><small>Dane aktualizowane na żywo (około 12 razy na sekundę). Wartości RAW pochodzą bezpośrednio z odebranej ramki BLE; wartości fizyczne są przeliczone według dotychczasowych skal.</small></p><pre id="debug">Oczekiwanie na dane...</pre></section>
