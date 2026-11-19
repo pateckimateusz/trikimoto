@@ -1,22 +1,89 @@
 <!DOCTYPE html>
-<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Triki Moto 2.3.2</title>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Triki Moto 2.4.1 · Cockpit</title>
 <style>
-:root{color-scheme:dark;--bg:#262626;--panel:#313133;--line:#313133;--text:#edf5ff;--muted:#a6b7ca;--blue:#1850BF;--green:#55dca7;--amber:#ffd37a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}main{max-width:850px;margin:auto;padding:14px}h1{font-size:25px;margin:4px 0}h2{font-size:17px;margin:0 0 12px}.muted,small{color:var(--muted)}.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:16px;margin:13px 0}.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}button{background:#283c53;color:white;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit}button.primary{background:#087cc5;border-color:#087cc5}button:disabled{opacity:.45}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{background:#101a28;border-radius:12px;padding:13px 5px;text-align:center}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:clamp(18px,5vw,30px);font-variant-numeric:tabular-nums;margin-top:5px}.hero{text-align:center;padding:18px 0}.hero strong{display:block;font-size:clamp(64px,17vw,115px);font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums}.hero .side{font-size:18px;color:var(--blue)}.track{height:9px;background:#26374b;border-radius:9px;overflow:hidden}.track>div{height:100%;background:var(--blue);width:0%}canvas{width:100%;height:170px;display:block}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;color:#c2dcf4;line-height:1.55}.hidden{display:none!important}label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}input[type=range]{width:100%}.pill{display:inline-block;padding:5px 10px;border:1px solid var(--line);border-radius:20px;font-size:13px}.warning{color:var(--amber)}.good{color:var(--green)}@media(max-width:420px){main{padding:9px}.card{padding:12px}button{padding:10px}}
+:root{color-scheme:dark;--bg:#0b1019;--panel:#172131;--line:#304158;--text:#edf5ff;--muted:#a6b7ca;--blue:#4dbbff;--green:#55dca7;--amber:#ffd37a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}main{max-width:850px;margin:auto;padding:14px}h1{font-size:25px;margin:4px 0}h2{font-size:17px;margin:0 0 12px}.muted,small{color:var(--muted)}.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:16px;margin:13px 0}.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}button{background:#283c53;color:white;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit}button.primary{background:#087cc5;border-color:#087cc5}button:disabled{opacity:.45}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{background:#101a28;border-radius:12px;padding:13px 5px;text-align:center}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:clamp(18px,5vw,30px);font-variant-numeric:tabular-nums;margin-top:5px}.hero{text-align:center;padding:18px 0}.hero strong{display:block;font-size:clamp(64px,17vw,115px);font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums}.hero .side{font-size:18px;color:var(--blue)}.track{height:9px;background:#26374b;border-radius:9px;overflow:hidden}.track>div{height:100%;background:var(--blue);width:0%}canvas{width:100%;height:170px;display:block}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;color:#c2dcf4;line-height:1.55}.hidden{display:none!important}label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}input[type=range]{width:100%}.pill{display:inline-block;padding:5px 10px;border:1px solid var(--line);border-radius:20px;font-size:13px}.warning{color:var(--amber)}.good{color:var(--green)}@media(max-width:420px){main{padding:9px}.card{padding:12px}button{padding:10px}}
 .quality-row{width:100%;min-height:36px;display:flex;align-items:center;justify-content:center;margin:4px 0 10px}.quality-row .pill{display:block;width:100%;text-align:center;white-space:normal;line-height:20px;min-height:32px}
+
+/* BMW Live Cockpit inspired, original dashboard styling */
+:root{--bg:#050a12;--panel:#0c1625;--line:#263a54;--text:#eaf4ff;--muted:#8ba3bd;--blue:#43adff}
+body{background:radial-gradient(ellipse at 50% -20%,#142b49 0%,#050a12 60%) fixed}
+main{max-width:1060px}
+.card{background:linear-gradient(160deg,#101d2f,#09121f);box-shadow:0 10px 30px #0004}
+.cockpit{border:1px solid #24496e;background:radial-gradient(ellipse at 50% 45%,#152c48 0%,#081421 62%,#060d18 100%);padding:20px 22px 16px;overflow:hidden}
+.cockpit-top{display:flex;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:2.2px;color:#80c9ff;border-bottom:1px solid #2a4563;padding-bottom:12px}
+.cockpit-mode{color:#839fba}.cockpit-title{text-align:center;font-size:13px;text-transform:uppercase;letter-spacing:4px;color:#d2e6ff;margin:14px 0 4px}
+.cockpit .quality-row{margin:4px auto 6px;max-width:100%;min-height:36px}
+.cockpit .quality-row .pill{background:#0a2035;border-color:#315d84;font-size:12px;letter-spacing:.6px}
+.instrument-cluster{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.65fr) minmax(0,1fr);gap:6px;align-items:center;min-height:240px}
+.dial{text-align:center;min-width:0}.dial-label{font-size:11px;color:#9ebcda;letter-spacing:1.2px;margin-bottom:10px}
+.dial-arc{width:min(100%,190px);aspect-ratio:1;margin:auto;position:relative;border-radius:50%;background:conic-gradient(from 225deg,#18334f 0deg,#18334f 270deg,transparent 270deg);display:grid;place-items:center;box-shadow:0 0 26px #145c9a22}
+.dial-fill{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 225deg,#44b4ff 0 var(--fill,0%),transparent var(--fill,0deg),transparent var(--fill,0deg) 270deg,transparent 270deg);mask:radial-gradient(farthest-side,transparent calc(100% - 11px),#000 calc(100% - 10px));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 11px),#000 calc(100% - 10px))}
+.dial-arc:after{content:'';position:absolute;inset:13px;border:1px solid #24435f;border-radius:50%}
+.dial-center{position:relative;z-index:1;display:flex;flex-direction:column;gap:6px;align-items:center}
+.dial-center strong{font-size:clamp(20px,3.8vw,38px);font-variant-numeric:tabular-nums;color:#d9efff;font-weight:650}.dial-center small{font-size:9px;letter-spacing:1.4px}
+.center-display{text-align:center;min-width:0}.center-label{font-size:11px;color:#9ab7d5;letter-spacing:2px}
+.angle-line strong{font-size:clamp(48px,10vw,105px);line-height:1.25;font-weight:650;letter-spacing:-4px;font-variant-numeric:tabular-nums;text-shadow:0 0 35px #268fe477;white-space:nowrap}
+.center-display .side{font-size:17px;letter-spacing:5px;color:#58b9ff;font-weight:700}
+.lean-scale{display:flex;align-items:center;gap:8px;margin:22px 0 0}.lean-scale>span{font-size:9px;color:#7896b6;letter-spacing:1px}.scale-track{position:relative;flex:1;height:5px;border-radius:9px;background:linear-gradient(90deg,#2486d4,#335574 50%,#2486d4)}.scale-center{position:absolute;left:50%;top:-7px;width:2px;height:19px;background:#d5eaff}.scale-marker{position:absolute;left:50%;top:-8px;width:6px;height:21px;border-radius:3px;background:#fff;box-shadow:0 0 13px #62c5ff;transform:translateX(-50%);transition:left .08s linear}
+.cockpit-bottom{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;border-top:1px solid #284562;padding-top:14px;margin-top:10px}.cockpit-bottom>div{text-align:center;border-right:1px solid #25415e;min-width:0}.cockpit-bottom>div:last-child{border:0}.cockpit-bottom span{display:block;font-size:10px;letter-spacing:1px;color:#86a7c6}.cockpit-bottom strong{display:block;margin-top:6px;font-size:clamp(16px,3vw,25px);font-variant-numeric:tabular-nums}.cockpit-note{text-align:center;font-size:11px;margin:14px 0 0;color:#7189a5}
+@media(max-width:560px){.cockpit{padding:14px 10px}.instrument-cluster{min-height:180px;gap:2px}.dial-label{font-size:9px;letter-spacing:0}.dial-arc:after{inset:8px}.dial-fill{mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 7px),#000 calc(100% - 6px))}.dial-center strong{font-size:clamp(14px,4vw,23px)}.dial-center small{font-size:7px}.angle-line strong{font-size:clamp(38px,10vw,66px);letter-spacing:-2px}.center-display .side{font-size:12px;letter-spacing:2px}.center-label{font-size:9px;letter-spacing:1px}.lean-scale{gap:4px;margin-top:14px}.lean-scale>span{font-size:7px}.cockpit-bottom{gap:2px}.cockpit-bottom span{font-size:8px}.cockpit-bottom strong{font-size:clamp(13px,3.5vw,20px)}}
+
+/* Triki Moto 2.4.1: pionowy kokpit na telefon */
+.instrument-cluster{display:flex;flex-direction:column;gap:20px;min-height:0;align-items:stretch;padding:16px 0 8px}
+.center-display{width:100%;padding:8px 4px 0}
+.angle-line strong{font-size:clamp(72px,17vw,132px);letter-spacing:-3px}
+.center-display .side{margin-top:0}
+.lean-scale{max-width:600px;margin:22px auto 4px}
+.max-dials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;max-width:610px;margin:0 auto}
+.dial-arc{width:min(100%,200px)}
+.dial-center strong{font-size:clamp(20px,5vw,36px)}
+.view-switch .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.view-switch button{min-width:0}
+@media(max-width:560px){
+ .cockpit{padding:14px 12px}
+ .instrument-cluster{gap:22px;padding:12px 0 4px}
+ .angle-line strong{font-size:clamp(68px,20vw,108px);letter-spacing:-2px}
+ .center-display .side{font-size:15px;letter-spacing:3px}
+ .center-label{font-size:11px;letter-spacing:2px}
+ .max-dials{gap:10px}
+ .dial-label{font-size:11px;letter-spacing:.5px;margin-bottom:10px}
+ .dial-arc{width:min(100%,165px)}
+ .dial-center strong{font-size:clamp(20px,6vw,29px)}
+ .dial-center small{font-size:8px}
+ .lean-scale{gap:8px;margin-top:18px}
+ .lean-scale>span{font-size:9px}
+ .cockpit-bottom{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 4px}
+ .cockpit-bottom>div:nth-child(2){border-right:0}
+ .cockpit-bottom span{font-size:10px}
+ .cockpit-bottom strong{font-size:21px}
+}
 </style></head><body><main>
-<h1>Triki Moto 2.3.2</h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
+<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.4.1</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
 <section class="card"><div class="row"><button class="primary" id="connect">Połącz Triki</button><button id="disconnect" disabled>Rozłącz</button><button id="zero" disabled>Wyzeruj pozycję</button></div><p id="status">Niepołączono</p><small id="calibration">Kalibracja żyroskopu rozpocznie się po połączeniu.</small></section>
-<section class="card"><div class="row"><button id="rideTab" class="primary">Tryb jazdy</button><button id="diagTab">Diagnostyka</button></div></section>
+
 <div id="rideView">
-<section class="card"><h2>Przechył</h2><div class="quality-row"><span id="quality" class="pill">Brak danych</span></div><div class="hero"><strong id="bigRoll">0.0°</strong><div class="side" id="side">PION</div></div><div class="track"><div id="leanBar"></div></div><p class="muted" style="text-align:center">Wskazanie orientacyjne · skala 0–60°</p><div class="grid"><div class="metric"><span>LEWO</span><strong id="left">0.0°</strong></div><div class="metric"><span>ROLL</span><strong id="roll">0.0°</strong></div><div class="metric"><span>PRAWO</span><strong id="right">0.0°</strong></div></div></section>
-<section class="card"><h2>Maksymalne przechyły</h2><div class="grid"><div class="metric"><span>Maks. lewo</span><strong id="maxLeft">0.0°</strong></div><div class="metric"><span>Maks. prawo</span><strong id="maxRight">0.0°</strong></div><div class="metric"><span>Czas</span><strong id="runtime">0 s</strong></div></div><p><button id="resetMax">Reset maksimum</button></p></section>
-<section class="card"><h2>Historia Roll</h2><canvas id="chart"></canvas></section>
+<section class="card cockpit">
+  <div class="cockpit-top"><span class="cockpit-brand">TRIKI / LIVE COCKPIT</span><span class="cockpit-mode">MOTO · LEAN</span></div>
+  <h2 class="cockpit-title">Przechył</h2>
+  <div class="quality-row"><span id="quality" class="pill">Brak danych</span></div>
+  <div class="instrument-cluster">
+    <div class="center-display"><div class="center-label">AKTUALNY KĄT</div><div class="angle-line"><strong id="bigRoll">0.0°</strong></div><div class="side" id="side">PION</div><div class="lean-scale"><span>LEWO</span><div class="scale-track"><i class="scale-center"></i><i id="leanMarker" class="scale-marker"></i></div><span>PRAWO</span></div></div>
+    <div class="max-dials">
+      <div class="dial dial-left"><div class="dial-label">MAX LEWO</div><div class="dial-arc"><div class="dial-fill" id="leftArc"></div><div class="dial-center"><strong id="maxLeft">0.0°</strong><small>MAKSIMUM</small></div></div></div>
+      <div class="dial dial-right"><div class="dial-label">MAX PRAWO</div><div class="dial-arc"><div class="dial-fill" id="rightArc"></div><div class="dial-center"><strong id="maxRight">0.0°</strong><small>MAKSIMUM</small></div></div></div>
+    </div>
+  </div>
+  <div class="cockpit-bottom"><div><span>LEWO</span><strong id="left">0.0°</strong></div><div><span>ROLL</span><strong id="roll">0.0°</strong></div><div><span>PRAWO</span><strong id="right">0.0°</strong></div><div><span>CZAS SESJI</span><strong id="runtime">0 s</strong></div></div>
+  <p class="cockpit-note">Wskazania orientacyjne · skala przechyłu ±60°</p>
+</section>
+<section class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Maksymalne przechyły</h2><button id="resetMax">Reset maksimum</button></div></section>
 </div>
 <div id="diagView" class="hidden">
 <section class="card"><h2>Orientacja i diagnostyka</h2><div class="grid"><div class="metric"><span>Pitch</span><strong id="pitch">0.0°</strong></div><div class="metric"><span>Yaw względny</span><strong id="yaw">0.0°</strong></div><div class="metric"><span>Odczyt</span><strong id="hz">0 Hz</strong></div></div><p class="muted"><small>Dane aktualizowane na żywo (około 12 razy na sekundę). Wartości RAW pochodzą bezpośrednio z odebranej ramki BLE; wartości fizyczne są przeliczone według dotychczasowych skal.</small></p><pre id="debug">Oczekiwanie na dane...</pre></section>
 <section class="card"><h2>Filtr</h2><label for="kp">Kp: <b id="kpValue">1.00</b></label><input id="kp" type="range" min="0" max="3" step="0.05" value="1"><label><input id="autoBias" type="checkbox" checked> Delikatna korekcja offsetu podczas bezruchu</label><p><small>Automatyczna korekcja wymaga co najmniej 5 sekund stabilnych danych. Wyłącz ją, jeśli urządzenie znajduje się na drgającym motocyklu.</small></p></section>
 </div>
 <section class="card"><h2>Rejestrator CSV</h2><div class="row"><button id="record" disabled>Rozpocznij zapis</button><button id="export" disabled>Eksportuj CSV</button><button id="clear">Wyczyść zapis</button></div><p class="muted" id="recordInfo">0 próbek · zapis wyłączony</p><small>Próbki są przechowywane w pamięci otwartej strony. Zapis trwa do 30 minut (maks. 36 000 próbek przy próbkowaniu 20 Hz). Pobierz CSV przed zamknięciem karty. Zapis nie działa w tle po uśpieniu iPhone'a.</small></section>
+<section class="card view-switch"><div class="row"><button id="rideTab" class="primary">Tryb jazdy</button><button id="diagTab">Diagnostyka</button></div></section>
 <p class="muted"><small>Wersja eksperymentalna. Pomiar w zakrętach wymaga walidacji; nie wykorzystuj wskazań do oceny przyczepności ani podejmowania decyzji podczas jazdy. Telefon i czujnik zamocuj przed ruszeniem.</small></p>
 </main><script>
 'use strict';
@@ -29,13 +96,12 @@ let device=null,tx=null,rx=null,buffer=[],connected=false,calibrated=false;
 let calStart=0,calCount=0,calSum=[0,0,0],gyroBias=[0,0,0],lastCalSample=null;
 const CAL_TIME=3000;
 let q=[1,0,0,0],kp=1,roll=0,pitch=0,yaw=0,zeroRoll=0,zeroPitch=0,zeroYaw=0;
-let maxLeft=0,maxRight=0,lastTime=0,startTime=0,lastHz=0,frames=0,hz=0,history=[];
-const HISTORY=240;
+let maxLeft=0,maxRight=0,lastTime=0,startTime=0,lastHz=0,frames=0,hz=0;
 let recording=false,records=[],lastRecordAt=0,stillSince=0,stillCount=0;
 const MAX_RECORDS=36000,RECORD_INTERVAL=50;
 let lastUi=0;
 function status(s){$('status').textContent=s}
-function resetState(){buffer=[];calibrated=false;calStart=0;calCount=0;calSum=[0,0,0];gyroBias=[0,0,0];lastCalSample=null;q=[1,0,0,0];roll=pitch=yaw=0;zeroRoll=zeroPitch=zeroYaw=0;maxLeft=maxRight=0;lastTime=0;startTime=performance.now();lastHz=startTime;frames=0;hz=0;history=[];stillSince=0;stillCount=0;recording=false;records=[];lastRecordAt=0;updateRecordUI();$('zero').disabled=true}
+function resetState(){buffer=[];calibrated=false;calStart=0;calCount=0;calSum=[0,0,0];gyroBias=[0,0,0];lastCalSample=null;q=[1,0,0,0];roll=pitch=yaw=0;zeroRoll=zeroPitch=zeroYaw=0;maxLeft=maxRight=0;lastTime=0;startTime=performance.now();lastHz=startTime;frames=0;hz=0;stillSince=0;stillCount=0;recording=false;records=[];lastRecordAt=0;updateRecordUI();$('zero').disabled=true}
 async function connect(){try{if(!navigator.bluetooth){status('Brak Web Bluetooth w tej przeglądarce');return} $('connect').disabled=true;status('Wybierz Triki...');device=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'Triki'}],optionalServices:[SERVICE]});device.addEventListener('gattserverdisconnected',onDisconnect);const server=await device.gatt.connect();const service=await server.getPrimaryService(SERVICE);rx=await service.getCharacteristic(RX);tx=await service.getCharacteristic(TX);await tx.startNotifications();tx.addEventListener('characteristicvaluechanged',onData);resetState();await rx.writeValue(START);connected=true;$('disconnect').disabled=false;status('Kalibracja żyroskopu...');$('calibration').textContent='Trzymaj Triki całkowicie nieruchomo przez około 3 sekundy.'}catch(e){status('Błąd: '+e.message);$('connect').disabled=false;if(device?.gatt?.connected)device.gatt.disconnect()}}
 function disconnect(){if(device?.gatt?.connected)device.gatt.disconnect()}
 function onDisconnect(){connected=false;calibrated=false;$('connect').disabled=false;$('disconnect').disabled=true;$('zero').disabled=true;$('record').disabled=true;recording=false;updateRecordUI();status('Rozłączono')}
@@ -53,11 +119,11 @@ const gx=raw[0]-gyroBias[0],gy=raw[1]-gyroBias[1],gz=raw[2]-gyroBias[2];const co
 const still=mag>.985&&mag<1.015&&Math.hypot(gx,gy,gz)<.35;
 if(still){if(!stillSince)stillSince=now;stillCount++}else{stillSince=0;stillCount=0}
 if($('autoBias').checked&&stillSince&&now-stillSince>5000){const beta=Math.min(.001,dt*.02);for(let i=0;i<3;i++)gyroBias[i]+=beta*(raw[i]-gyroBias[i])}
-maxLeft=Math.max(maxLeft,-shownRoll);maxRight=Math.max(maxRight,shownRoll);history.push(shownRoll);if(history.length>HISTORY)history.shift();frames++;if(now-lastHz>=1000){hz=frames*1000/(now-lastHz);frames=0;lastHz=now}
+maxLeft=Math.max(maxLeft,-shownRoll);maxRight=Math.max(maxRight,shownRoll);frames++;if(now-lastHz>=1000){hz=frames*1000/(now-lastHz);frames=0;lastHz=now}
 const quality=!corrected?'Korekta wstrzymana':mag<.97||mag>1.03?'Sprawdź przyspieszenia':'Korekta aktywna';
 if(recording&&now-lastRecordAt>=RECORD_INTERVAL){lastRecordAt=now;if(records.length<MAX_RECORDS){records.push([new Date().toISOString(),((now-startTime)/1000).toFixed(3),shownRoll.toFixed(3),shownPitch.toFixed(3),shownYaw.toFixed(3),gx.toFixed(3),gy.toFixed(3),gz.toFixed(3),ax.toFixed(4),ay.toFixed(4),az.toFixed(4),mag.toFixed(4),corrected?1:0,still?1:0])}else{recording=false;status('Limit zapisu osiągnięty – eksportuj CSV')}updateRecordUI()}
-if(now-lastUi>=80){lastUi=now;updateUI({now,shownRoll,shownPitch,shownYaw,gx,gy,gz,raw,rawInt:v,ax,ay,az,mag,corrected,still,quality});drawChart()}}
-function updateUI(d){const fmt=n=>n.toFixed(1)+'°';$('bigRoll').textContent=fmt(Math.abs(d.shownRoll));$('side').textContent=d.shownRoll>1?'PRAWO':d.shownRoll< -1?'LEWO':'PION';$('leanBar').style.width=Math.min(100,Math.abs(d.shownRoll)/60*100)+'%';$('roll').textContent=fmt(d.shownRoll);$('left').textContent=fmt(Math.max(0,-d.shownRoll));$('right').textContent=fmt(Math.max(0,d.shownRoll));$('pitch').textContent=fmt(d.shownPitch);$('yaw').textContent=fmt(d.shownYaw);$('maxLeft').textContent=fmt(maxLeft);$('maxRight').textContent=fmt(maxRight);$('runtime').textContent=Math.floor((d.now-startTime)/1000)+' s';$('hz').textContent=hz.toFixed(0)+' Hz';$('quality').textContent=d.quality;$('quality').className='pill '+(d.corrected?'good':'warning');$('debug').textContent=`DANE ŻYROSKOPU – BEZ KOREKCJI [°/s]
+if(now-lastUi>=80){lastUi=now;updateUI({now,shownRoll,shownPitch,shownYaw,gx,gy,gz,raw,rawInt:v,ax,ay,az,mag,corrected,still,quality})}}
+function updateUI(d){const fmt=n=>n.toFixed(1)+'°';$('bigRoll').textContent=fmt(Math.abs(d.shownRoll));$('side').textContent=d.shownRoll>1?'PRAWO':d.shownRoll< -1?'LEWO':'PION';$('leanMarker').style.left=(50+Math.max(-60,Math.min(60,d.shownRoll))/60*50)+'%';$('leftArc').style.setProperty('--fill',(Math.min(60,maxLeft)/60*270)+'deg');$('rightArc').style.setProperty('--fill',(Math.min(60,maxRight)/60*270)+'deg');$('roll').textContent=fmt(d.shownRoll);$('left').textContent=fmt(Math.max(0,-d.shownRoll));$('right').textContent=fmt(Math.max(0,d.shownRoll));$('pitch').textContent=fmt(d.shownPitch);$('yaw').textContent=fmt(d.shownYaw);$('maxLeft').textContent=fmt(maxLeft);$('maxRight').textContent=fmt(maxRight);$('runtime').textContent=Math.floor((d.now-startTime)/1000)+' s';$('hz').textContent=hz.toFixed(0)+' Hz';$('quality').textContent=d.quality;$('quality').className='pill '+(d.corrected?'good':'warning');$('debug').textContent=`DANE ŻYROSKOPU – BEZ KOREKCJI [°/s]
 X: ${d.raw[0].toFixed(4)}
 Y: ${d.raw[1].toFixed(4)}
 Z: ${d.raw[2].toFixed(4)}
@@ -104,9 +170,8 @@ Częstotliwość: ${hz.toFixed(1)} Hz
 Czas sesji: ${((d.now-startTime)/1000).toFixed(1)} s
 Zapis CSV: ${recording?'AKTYWNY':'WYŁĄCZONY'}
 Próbki CSV: ${records.length}`}
-const canvas=$('chart'),ctx=canvas.getContext('2d');function drawChart(){if($('rideView').classList.contains('hidden'))return;const width=canvas.clientWidth,height=canvas.clientHeight,dpr=window.devicePixelRatio||1;if(canvas.width!==Math.round(width*dpr)||canvas.height!==Math.round(height*dpr)){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr)}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);const center=height/2,scale=height/140;ctx.strokeStyle='#40536a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,center);ctx.lineTo(width,center);ctx.stroke();if(history.length<2)return;ctx.strokeStyle='#46b6ff';ctx.lineWidth=2;ctx.beginPath();history.forEach((value,i)=>{const x=i/(HISTORY-1)*width,y=center-value*scale;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke()}
-$('zero').onclick=()=>{if(!calibrated)return;zeroRoll=roll;zeroPitch=pitch;zeroYaw=yaw;maxLeft=maxRight=0;history=[];status('Pozycja wyzerowana')};$('resetMax').onclick=()=>{maxLeft=maxRight=0};$('kp').oninput=e=>{kp=Number(e.target.value);$('kpValue').textContent=kp.toFixed(2)};
-$('rideTab').onclick=()=>{ $('rideView').classList.remove('hidden');$('diagView').classList.add('hidden');$('rideTab').classList.add('primary');$('diagTab').classList.remove('primary');drawChart()};$('diagTab').onclick=()=>{$('diagView').classList.remove('hidden');$('rideView').classList.add('hidden');$('diagTab').classList.add('primary');$('rideTab').classList.remove('primary')};
+$('zero').onclick=()=>{if(!calibrated)return;zeroRoll=roll;zeroPitch=pitch;zeroYaw=yaw;maxLeft=maxRight=0;status('Pozycja wyzerowana')};$('resetMax').onclick=()=>{maxLeft=maxRight=0};$('kp').oninput=e=>{kp=Number(e.target.value);$('kpValue').textContent=kp.toFixed(2)};
+$('rideTab').onclick=()=>{ $('rideView').classList.remove('hidden');$('diagView').classList.add('hidden');$('rideTab').classList.add('primary');$('diagTab').classList.remove('primary')};$('diagTab').onclick=()=>{$('diagView').classList.remove('hidden');$('rideView').classList.add('hidden');$('diagTab').classList.add('primary');$('rideTab').classList.remove('primary')};
 function updateRecordUI(){$('record').textContent=recording?'Zatrzymaj zapis':'Rozpocznij zapis';$('record').disabled=!calibrated||records.length>=MAX_RECORDS;$('export').disabled=records.length===0;$('recordInfo').textContent=records.length+' próbek · '+(recording?'zapis aktywny':'zapis wyłączony')}
 $('record').onclick=()=>{if(!calibrated)return;recording=!recording;lastRecordAt=0;updateRecordUI()};$('clear').onclick=()=>{if(recording){status('Zatrzymaj zapis przed wyczyszczeniem');return}records=[];updateRecordUI()};$('export').onclick=()=>{if(!records.length)return;const header='timestamp_iso,elapsed_s,roll_deg,pitch_deg,yaw_deg,gx_dps,gy_dps,gz_dps,ax_g,ay_g,az_g,acc_magnitude_g,acc_correction,still_condition';const csv=[header,...records.map(row=>row.join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='triki_moto_2_3_'+new Date().toISOString().replace(/[:.]/g,'-')+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000)};
 </script></body></html>
