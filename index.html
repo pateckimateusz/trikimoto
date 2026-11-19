@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Triki Moto 2.4.1 · Cockpit</title>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Triki Moto 2.4.2 · Cockpit</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1019;--panel:#172131;--line:#304158;--text:#edf5ff;--muted:#a6b7ca;--blue:#4dbbff;--green:#55dca7;--amber:#ffd37a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}main{max-width:850px;margin:auto;padding:14px}h1{font-size:25px;margin:4px 0}h2{font-size:17px;margin:0 0 12px}.muted,small{color:var(--muted)}.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:16px;margin:13px 0}.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}button{background:#283c53;color:white;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit}button.primary{background:#087cc5;border-color:#087cc5}button:disabled{opacity:.45}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{background:#101a28;border-radius:12px;padding:13px 5px;text-align:center}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:clamp(18px,5vw,30px);font-variant-numeric:tabular-nums;margin-top:5px}.hero{text-align:center;padding:18px 0}.hero strong{display:block;font-size:clamp(64px,17vw,115px);font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums}.hero .side{font-size:18px;color:var(--blue)}.track{height:9px;background:#26374b;border-radius:9px;overflow:hidden}.track>div{height:100%;background:var(--blue);width:0%}canvas{width:100%;height:170px;display:block}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;color:#c2dcf4;line-height:1.55}.hidden{display:none!important}label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}input[type=range]{width:100%}.pill{display:inline-block;padding:5px 10px;border:1px solid var(--line);border-radius:20px;font-size:13px}.warning{color:var(--amber)}.good{color:var(--green)}@media(max-width:420px){main{padding:9px}.card{padding:12px}button{padding:10px}}
 .quality-row{width:100%;min-height:36px;display:flex;align-items:center;justify-content:center;margin:4px 0 10px}.quality-row .pill{display:block;width:100%;text-align:center;white-space:normal;line-height:20px;min-height:32px}
@@ -57,13 +57,31 @@ main{max-width:1060px}
  .cockpit-bottom span{font-size:10px}
  .cockpit-bottom strong{font-size:21px}
 }
+
+/* Triki Moto 2.4.2 – mobilny kokpit bez przewijania */
+.cockpit-launch{appearance:none;background:transparent;border:0;color:#80c9ff;font:inherit;font-size:inherit;letter-spacing:inherit;padding:2px 0;cursor:pointer;text-align:left;touch-action:manipulation}
+.cockpit-launch:focus-visible,.fullscreen-exit:focus-visible{outline:2px solid #8dd4ff;outline-offset:3px}
+.fullscreen-exit{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:4;padding:9px 12px;border-radius:20px;background:#193b5c;color:#e9f6ff;border:1px solid #5b9acc;font-size:12px}
+html.cockpit-locked,body.cockpit-locked{overflow:hidden!important;overscroll-behavior:none;height:100%;width:100%}
+body.cockpit-locked{position:fixed;inset:0;touch-action:none}
+body.cockpit-locked #cockpit{position:fixed!important;inset:0!important;z-index:99999;width:100%!important;max-width:none!important;height:100dvh!important;min-height:100vh;margin:0!important;border:0!important;border-radius:0!important;display:flex;flex-direction:column;justify-content:space-evenly;padding:max(15px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(15px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));overflow:hidden;overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none}
+body.cockpit-locked #cockpit .cockpit-top{padding-right:105px;min-height:40px;align-items:center}
+body.cockpit-locked #cockpit .cockpit-title{margin:4px 0}
+body.cockpit-locked #cockpit .instrument-cluster{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:8px}
+body.cockpit-locked #cockpit .center-display{flex:0 1 auto}
+body.cockpit-locked #cockpit .max-dials{flex:0 1 auto}
+body.cockpit-locked #cockpit .angle-line strong{font-size:clamp(52px,16vw,110px)}
+body.cockpit-locked #cockpit .cockpit-bottom{flex-shrink:0}
+body.cockpit-locked #cockpit .cockpit-note{margin:5px 0 0}
+@media(max-height:690px){body.cockpit-locked #cockpit{padding-top:10px;padding-bottom:10px;justify-content:space-between}body.cockpit-locked #cockpit .instrument-cluster{gap:0}body.cockpit-locked #cockpit .dial-arc{width:min(27vw,110px);height:min(27vw,110px)}body.cockpit-locked #cockpit .cockpit-bottom{padding-top:6px;margin-top:3px}body.cockpit-locked #cockpit .cockpit-note{display:none}}
 </style></head><body><main>
-<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.4.1</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
+<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.4.2</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
 <section class="card"><div class="row"><button class="primary" id="connect">Połącz Triki</button><button id="disconnect" disabled>Rozłącz</button><button id="zero" disabled>Wyzeruj pozycję</button></div><p id="status">Niepołączono</p><small id="calibration">Kalibracja żyroskopu rozpocznie się po połączeniu.</small></section>
 
 <div id="rideView">
-<section class="card cockpit">
-  <div class="cockpit-top"><span class="cockpit-brand">TRIKI / LIVE COCKPIT</span><span class="cockpit-mode">MOTO · LEAN</span></div>
+<section class="card cockpit" id="cockpit" aria-label="Kokpit przechyłu">
+  <div class="cockpit-top"><button type="button" class="cockpit-brand cockpit-launch" id="fullscreenToggle" title="Włącz pełny ekran">TRIKI / LIVE COCKPIT <span aria-hidden="true">⛶</span></button><span class="cockpit-mode">MOTO · LEAN</span></div>
+  <button type="button" id="fullscreenExit" class="fullscreen-exit hidden" aria-label="Zamknij pełny ekran">✕ Zamknij</button>
   <h2 class="cockpit-title">Przechył</h2>
   <div class="quality-row"><span id="quality" class="pill">Brak danych</span></div>
   <div class="instrument-cluster">
@@ -174,4 +192,45 @@ $('zero').onclick=()=>{if(!calibrated)return;zeroRoll=roll;zeroPitch=pitch;zeroY
 $('rideTab').onclick=()=>{ $('rideView').classList.remove('hidden');$('diagView').classList.add('hidden');$('rideTab').classList.add('primary');$('diagTab').classList.remove('primary')};$('diagTab').onclick=()=>{$('diagView').classList.remove('hidden');$('rideView').classList.add('hidden');$('diagTab').classList.add('primary');$('rideTab').classList.remove('primary')};
 function updateRecordUI(){$('record').textContent=recording?'Zatrzymaj zapis':'Rozpocznij zapis';$('record').disabled=!calibrated||records.length>=MAX_RECORDS;$('export').disabled=records.length===0;$('recordInfo').textContent=records.length+' próbek · '+(recording?'zapis aktywny':'zapis wyłączony')}
 $('record').onclick=()=>{if(!calibrated)return;recording=!recording;lastRecordAt=0;updateRecordUI()};$('clear').onclick=()=>{if(recording){status('Zatrzymaj zapis przed wyczyszczeniem');return}records=[];updateRecordUI()};$('export').onclick=()=>{if(!records.length)return;const header='timestamp_iso,elapsed_s,roll_deg,pitch_deg,yaw_deg,gx_dps,gy_dps,gz_dps,ax_g,ay_g,az_g,acc_magnitude_g,acc_correction,still_condition';const csv=[header,...records.map(row=>row.join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='triki_moto_2_3_'+new Date().toISOString().replace(/[:.]/g,'-')+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000)};
+
+// ===== KOKPIT PEŁNOEKRANOWY =====
+const cockpitElement=$('cockpit');
+let cockpitFullscreen=false;
+let previousScrollY=0;
+function setCockpitFullscreen(enabled){
+ if(enabled===cockpitFullscreen)return;
+ cockpitFullscreen=enabled;
+ if(enabled){
+  previousScrollY=window.scrollY;
+  document.documentElement.classList.add('cockpit-locked');
+  document.body.classList.add('cockpit-locked');
+  $('fullscreenExit').classList.remove('hidden');
+  $('fullscreenToggle').setAttribute('aria-label','Kokpit pełnoekranowy jest aktywny');
+  // Fullscreen API działa tylko w części przeglądarek, m.in. nie zawsze w Bluefy/iOS.
+  if(cockpitElement.requestFullscreen){
+   cockpitElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{});
+  }
+ }else{
+  document.documentElement.classList.remove('cockpit-locked');
+  document.body.classList.remove('cockpit-locked');
+  $('fullscreenExit').classList.add('hidden');
+  $('fullscreenToggle').setAttribute('aria-label','Włącz kokpit pełnoekranowy');
+  if(document.fullscreenElement&&document.exitFullscreen){
+   document.exitFullscreen().catch(()=>{});
+  }
+  window.scrollTo(0,previousScrollY);
+ }
+}
+$('fullscreenToggle').addEventListener('click',()=>setCockpitFullscreen(true));
+$('fullscreenExit').addEventListener('click',()=>setCockpitFullscreen(false));
+document.addEventListener('fullscreenchange',()=>{
+ // Wyjście z natywnego pełnego ekranu klawiszem/systemowo.
+ if(!document.fullscreenElement&&cockpitFullscreen&&document.fullscreenEnabled){
+  setCockpitFullscreen(false);
+ }
+});
+// W trybie kokpitu nie dopuszczamy do przesuwania strony gestem palca.
+cockpitElement.addEventListener('touchmove',event=>{
+ if(cockpitFullscreen&&event.cancelable)event.preventDefault();
+},{passive:false});
 </script></body></html>
