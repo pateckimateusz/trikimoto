@@ -348,7 +348,7 @@ function process(v) {
   // Y = przechył lewo/prawo
   // X = pochylenie przód/tył
   // Z = obrót wokół osi pionowej
-  roll+=gy*dt;
+  roll-=gy*dt;
   pitch+=gx*dt;
   yaw+=gz*dt;
 
