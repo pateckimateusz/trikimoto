@@ -1,605 +1,111 @@
-
 <!DOCTYPE html>
-<html lang="pl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Triki Moto 2.2</title>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Triki Moto 2.3.1</title>
 <style>
-:root{
- --bg:#0b1019;--card:#172131;--line:#29394d;
- --text:#eef5ff;--muted:#94a8c0;
- --blue:#46b6ff;--green:#49db9d;--red:#ff6678
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
- font-family:system-ui,-apple-system,sans-serif}
-main{max-width:850px;margin:auto;padding:15px}
-h1{font-size:25px;margin:5px 0}
-h2{font-size:17px;margin:0 0 14px}
-p,.small{color:var(--muted)}
-.card{background:var(--card);border:1px solid var(--line);
- border-radius:16px;padding:17px;margin-top:15px}
-.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
-button,input,select{font:inherit}
-button{background:#25354b;border:1px solid var(--line);
- color:white;padding:11px 14px;border-radius:10px}
-button.primary{background:#087cc5;border-color:#087cc5}
-button:disabled{opacity:.45}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.metric{background:#101a28;border-radius:12px;
- padding:13px 5px;text-align:center}
-.metric span{display:block;font-size:12px;color:var(--muted)}
-.metric strong{display:block;font-size:26px;margin-top:6px;
- font-variant-numeric:tabular-nums}
-.scene{height:200px;display:flex;align-items:center;
- justify-content:center}
-.bike{position:relative;width:110px;height:150px;
- transform-origin:center;transition:transform .06s linear}
-.bike .body{position:absolute;inset:0;border-radius:38px 38px 25px 25px;
- border:3px solid #7ed1ff;
- background:linear-gradient(145deg,#2399e6,#064b84)}
-.bike .center{position:absolute;left:44%;top:15%;width:12%;height:70%;
- border-radius:8px;background:#b7e9ff}
-.bike .front{position:absolute;left:28%;top:-14px;width:44%;
- height:24px;border-radius:7px;background:#dbefff}
-canvas{width:100%;height:165px;display:block}
-label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px}
-input[type=range]{width:100%}
-pre{white-space:pre-wrap;overflow-wrap:anywhere;
- color:#b9d5f2;font-size:12px;line-height:1.6}
-.small{font-size:12px;line-height:1.5}
-@media(max-width:450px){
- .metric strong{font-size:22px}
- main{padding:10px}
-}
-</style>
-</head>
-<body>
-<main>
-<h1>🏍️ Triki Moto 2.2</h1>
-<p>Pomiar przechyłu motocykla · filtr Mahony</p>
-
-<div class="card">
- <div class="row">
-  <button class="primary" id="connect">Połącz Triki</button>
-  <button id="disconnect" disabled>Rozłącz</button>
-  <button id="zero" disabled>Wyzeruj motocykl</button>
- </div>
- <p id="status">Niepołączono</p>
- <p class="small" id="calibration">
-  Kalibracja rozpocznie się po połączeniu.
- </p>
+:root{color-scheme:dark;--bg:#0b1019;--panel:#172131;--line:#304158;--text:#edf5ff;--muted:#a6b7ca;--blue:#4dbbff;--green:#55dca7;--amber:#ffd37a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}main{max-width:850px;margin:auto;padding:14px}h1{font-size:25px;margin:4px 0}h2{font-size:17px;margin:0 0 12px}.muted,small{color:var(--muted)}.card{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:16px;margin:13px 0}.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}button{background:#283c53;color:white;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit}button.primary{background:#087cc5;border-color:#087cc5}button:disabled{opacity:.45}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{background:#101a28;border-radius:12px;padding:13px 5px;text-align:center}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:clamp(18px,5vw,30px);font-variant-numeric:tabular-nums;margin-top:5px}.hero{text-align:center;padding:18px 0}.hero strong{display:block;font-size:clamp(64px,17vw,115px);font-weight:750;line-height:1.1;font-variant-numeric:tabular-nums}.hero .side{font-size:18px;color:var(--blue)}.track{height:9px;background:#26374b;border-radius:9px;overflow:hidden}.track>div{height:100%;background:var(--blue);width:0%}canvas{width:100%;height:170px;display:block}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;color:#c2dcf4;line-height:1.55}.hidden{display:none!important}label{display:block;color:var(--muted);font-size:13px;margin:10px 0 5px}input[type=range]{width:100%}.pill{display:inline-block;padding:5px 10px;border:1px solid var(--line);border-radius:20px;font-size:13px}.warning{color:var(--amber)}.good{color:var(--green)}@media(max-width:420px){main{padding:9px}.card{padding:12px}button{padding:10px}}
+</style></head><body><main>
+<h1>🏍️ Triki Moto 2.3.1</h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
+<section class="card"><div class="row"><button class="primary" id="connect">Połącz Triki</button><button id="disconnect" disabled>Rozłącz</button><button id="zero" disabled>Wyzeruj pozycję</button></div><p id="status">Niepołączono</p><small id="calibration">Kalibracja żyroskopu rozpocznie się po połączeniu.</small></section>
+<section class="card"><div class="row"><button id="rideTab" class="primary">Tryb jazdy</button><button id="diagTab">Diagnostyka</button><span id="quality" class="pill">Brak danych</span></div></section>
+<div id="rideView">
+<section class="card"><h2>Przechył</h2><div class="hero"><strong id="bigRoll">0.0°</strong><div class="side" id="side">PION</div></div><div class="track"><div id="leanBar"></div></div><p class="muted" style="text-align:center">Wskazanie orientacyjne · skala 0–60°</p><div class="grid"><div class="metric"><span>LEWO</span><strong id="left">0.0°</strong></div><div class="metric"><span>ROLL</span><strong id="roll">0.0°</strong></div><div class="metric"><span>PRAWO</span><strong id="right">0.0°</strong></div></div></section>
+<section class="card"><h2>Maksymalne przechyły</h2><div class="grid"><div class="metric"><span>Maks. lewo</span><strong id="maxLeft">0.0°</strong></div><div class="metric"><span>Maks. prawo</span><strong id="maxRight">0.0°</strong></div><div class="metric"><span>Czas</span><strong id="runtime">0 s</strong></div></div><p><button id="resetMax">Reset maksimum</button></p></section>
+<section class="card"><h2>Historia Roll</h2><canvas id="chart"></canvas></section>
 </div>
-
-<div class="card">
- <h2>Przechył motocykla</h2>
- <div class="scene">
-  <div class="bike" id="bike">
-   <div class="body"></div>
-   <div class="center"></div>
-   <div class="front"></div>
-  </div>
- </div>
- <div class="grid">
-  <div class="metric"><span>LEWO</span><strong id="left">0.0°</strong></div>
-  <div class="metric"><span>ROLL</span><strong id="roll">0.0°</strong></div>
-  <div class="metric"><span>PRAWO</span><strong id="right">0.0°</strong></div>
- </div>
+<div id="diagView" class="hidden">
+<section class="card"><h2>Orientacja i diagnostyka</h2><div class="grid"><div class="metric"><span>Pitch</span><strong id="pitch">0.0°</strong></div><div class="metric"><span>Yaw względny</span><strong id="yaw">0.0°</strong></div><div class="metric"><span>Odczyt</span><strong id="hz">0 Hz</strong></div></div><p class="muted"><small>Dane aktualizowane na żywo (około 12 razy na sekundę). Wartości RAW pochodzą bezpośrednio z odebranej ramki BLE; wartości fizyczne są przeliczone według dotychczasowych skal.</small></p><pre id="debug">Oczekiwanie na dane...</pre></section>
+<section class="card"><h2>Filtr</h2><label for="kp">Kp: <b id="kpValue">1.00</b></label><input id="kp" type="range" min="0" max="3" step="0.05" value="1"><label><input id="autoBias" type="checkbox" checked> Delikatna korekcja offsetu podczas bezruchu</label><p><small>Automatyczna korekcja wymaga co najmniej 5 sekund stabilnych danych. Wyłącz ją, jeśli urządzenie znajduje się na drgającym motocyklu.</small></p></section>
 </div>
-
-<div class="card">
- <h2>Orientacja</h2>
- <div class="grid">
-  <div class="metric"><span>Pitch</span><strong id="pitch">0.0°</strong></div>
-  <div class="metric"><span>Yaw względny</span><strong id="yaw">0.0°</strong></div>
-  <div class="metric"><span>Odczyt</span><strong id="hz">0 Hz</strong></div>
- </div>
-</div>
-
-<div class="card">
- <h2>Maksymalne przechyły</h2>
- <div class="grid">
-  <div class="metric"><span>Maks. lewo</span><strong id="maxLeft">0.0°</strong></div>
-  <div class="metric"><span>Maks. prawo</span><strong id="maxRight">0.0°</strong></div>
-  <div class="metric"><span>Czas</span><strong id="runtime">0 s</strong></div>
- </div>
- <div style="margin-top:12px">
-  <button id="resetMax">Reset maksimum</button>
- </div>
-</div>
-
-<div class="card">
- <h2>Historia przechyłu</h2>
- <canvas id="chart"></canvas>
-</div>
-
-<div class="card">
- <h2>Ustawienia filtra</h2>
- <label>Wzmocnienie korekty Kp: <b id="kpValue">1.00</b></label>
- <input id="kp" type="range" min="0" max="3" step="0.05" value="1">
- <p class="small">
-  Większa wartość Kp oznacza silniejszą korektę akcelerometrem.
-  Korekta jest wstrzymywana przy dużym odchyleniu przyspieszenia od 1 g.
- </p>
-</div>
-
-<div class="card">
- <h2>Diagnostyka</h2>
- <pre id="debug">Oczekiwanie na dane...</pre>
-</div>
-</main>
-
-<script>
-"use strict";
-
-// ===== BLUETOOTH =====
-
-const SERVICE="6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-const RX="6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-const TX="6e400003-b5a3-f393-e0a9-e50e24dcca9e";
-
-const START=new Uint8Array([
- 0x20,0x10,0x00,0xD0,0x07,0x68,0x00,0x03
-]);
-
-const $=id=>document.getElementById(id);
-const RAD=Math.PI/180;
-const DEG=180/Math.PI;
-
-let device=null,tx=null,rx=null;
-let buffer=[];
-let connected=false;
-
-// ===== KALIBRACJA =====
-
+<section class="card"><h2>Rejestrator CSV</h2><div class="row"><button id="record" disabled>Rozpocznij zapis</button><button id="export" disabled>Eksportuj CSV</button><button id="clear">Wyczyść zapis</button></div><p class="muted" id="recordInfo">0 próbek · zapis wyłączony</p><small>Próbki są przechowywane w pamięci otwartej strony. Zapis trwa do 30 minut (maks. 36 000 próbek przy próbkowaniu 20 Hz). Pobierz CSV przed zamknięciem karty. Zapis nie działa w tle po uśpieniu iPhone'a.</small></section>
+<p class="muted"><small>Wersja eksperymentalna. Pomiar w zakrętach wymaga walidacji; nie wykorzystuj wskazań do oceny przyczepności ani podejmowania decyzji podczas jazdy. Telefon i czujnik zamocuj przed ruszeniem.</small></p>
+</main><script>
+'use strict';
+const SERVICE='6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const RX='6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+const TX='6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+const START=new Uint8Array([0x20,0x10,0x00,0xD0,0x07,0x68,0x00,0x03]);
+const $=id=>document.getElementById(id),RAD=Math.PI/180,DEG=180/Math.PI;
+let device=null,tx=null,rx=null,buffer=[],connected=false,calibrated=false;
+let calStart=0,calCount=0,calSum=[0,0,0],gyroBias=[0,0,0],lastCalSample=null;
 const CAL_TIME=3000;
-let calStart=0;
-let calCount=0;
-let calSum=[0,0,0];
-let gyroBias=[0,0,0];
-let calibrated=false;
-
-// ===== FILTR =====
-
-let q=[1,0,0,0];
-let kp=1.0;
-
-// Osie czujnika:
-// X – pochylenie przód/tył
-// Y – przechył lewo/prawo
-// Z – obrót poziomy
-//
-// W poprzedniej wersji Roll miał odwrócony znak.
-// Zachowujemy tę konwencję w wyświetlaniu.
-
-let roll=0,pitch=0,yaw=0;
-let zeroRoll=0,zeroPitch=0,zeroYaw=0;
-
-let maxLeft=0,maxRight=0;
-let history=[];
-const HISTORY=220;
-
-let lastTime=0,startTime=0,lastHz=0;
-let frames=0,hz=0;
-
-// ===== POMOCNICZE =====
-
-function setStatus(s){$("status").textContent=s}
-
-function resetState(){
- q=[1,0,0,0];
- buffer=[];
- gyroBias=[0,0,0];
- calSum=[0,0,0];
- calCount=0;
- calStart=0;
- calibrated=false;
-
- roll=pitch=yaw=0;
- zeroRoll=zeroPitch=zeroYaw=0;
- maxLeft=maxRight=0;
- history=[];
-
- lastTime=0;
- startTime=performance.now();
- lastHz=startTime;
- frames=0;
- hz=0;
- $("zero").disabled=true;
-}
-
-// ===== POŁĄCZENIE =====
-
-async function connect(){
- try{
-  if(!navigator.bluetooth){
-   setStatus("Brak obsługi Web Bluetooth");
-   return;
-  }
-
-  $("connect").disabled=true;
-  setStatus("Wybierz Triki...");
-
-  device=await navigator.bluetooth.requestDevice({
-   filters:[{namePrefix:"Triki"}],
-   optionalServices:[SERVICE]
-  });
-
-  device.addEventListener("gattserverdisconnected",onDisconnect);
-
-  const server=await device.gatt.connect();
-  const service=await server.getPrimaryService(SERVICE);
-
-  rx=await service.getCharacteristic(RX);
-  tx=await service.getCharacteristic(TX);
-
-  await tx.startNotifications();
-  tx.addEventListener("characteristicvaluechanged",onData);
-
-  resetState();
-
-  await rx.writeValue(START);
-
-  connected=true;
-  $("disconnect").disabled=false;
-  setStatus("Kalibracja żyroskopu...");
-  $("calibration").textContent=
-   "Trzymaj Triki całkowicie nieruchomo przez około 3 sekundy.";
- }catch(e){
-  setStatus("Błąd: "+e.message);
-  $("connect").disabled=false;
-  if(device?.gatt?.connected) device.gatt.disconnect();
- }
-}
-
-function disconnect(){
- if(device?.gatt?.connected)device.gatt.disconnect();
-}
-
-function onDisconnect(){
- connected=false;
- calibrated=false;
- $("connect").disabled=false;
- $("disconnect").disabled=true;
- $("zero").disabled=true;
- setStatus("Rozłączono");
-}
-
-$("connect").onclick=connect;
-$("disconnect").onclick=disconnect;
-
-// ===== DEKODOWANIE =====
-
-function onData(event){
- const data=event.target.value;
-
- for(let i=0;i<data.byteLength;i++)
-  buffer.push(data.getUint8(i));
-
- while(buffer.length>=14){
-  if(buffer[0]!==0x22 ||
-    (buffer[1]!==0 && buffer[1]!==1)){
-   buffer.shift();
-   continue;
-  }
-
-  const bytes=buffer.splice(0,14);
-  const dv=new DataView(Uint8Array.from(bytes).buffer);
-  const v=[];
-
-  for(let i=0;i<6;i++)
-   v.push(dv.getInt16(2+i*2,true));
-
-  processFrame(v);
- }
-
- if(buffer.length>1024)buffer=[];
-}
-
-// ===== KWATERNIONY / MAHONY =====
-
-function updateMahony(gx,gy,gz,ax,ay,az,dt){
- // Gyro w rad/s
- gx*=RAD;gy*=RAD;gz*=RAD;
-
- let [w,x,y,z]=q;
- const mag=Math.hypot(ax,ay,az);
-
- let correction=false;
-
- // Akcelerometr tylko blisko 1 g
- if(mag>0.90 && mag<1.10){
-  ax/=mag;ay/=mag;az/=mag;
-
-  // Przewidywany wektor grawitacji
-  const vx=2*(x*z-w*y);
-  const vy=2*(w*x+y*z);
-  const vz=w*w-x*x-y*y+z*z;
-
-  // Iloczyn wektorowy: zmierzony x przewidywany
-  const ex=ay*vz-az*vy;
-  const ey=az*vx-ax*vz;
-  const ez=ax*vy-ay*vx;
-
-  gx+=kp*ex;
-  gy+=kp*ey;
-  gz+=kp*ez;
-
-  correction=true;
- }
-
- // Całkowanie pochodnej kwaternionu
- const dw=0.5*(-x*gx-y*gy-z*gz);
- const dx=0.5*( w*gx+y*gz-z*gy);
- const dy=0.5*( w*gy-x*gz+z*gx);
- const dz=0.5*( w*gz+x*gy-y*gx);
-
- w+=dw*dt;
- x+=dx*dt;
- y+=dy*dt;
- z+=dz*dt;
-
- const norm=Math.hypot(w,x,y,z);
-
- if(norm>0){
-  q=[w/norm,x/norm,y/norm,z/norm];
- }
-
- return correction;
-}
-
-function getEuler(){
- const [w,x,y,z]=q;
-
- const r=Math.atan2(
-  2*(w*x+y*z),
-  1-2*(x*x+y*y)
- );
-
- const p=Math.asin(
-  Math.max(-1,Math.min(1,2*(w*y-z*x)))
- );
-
- const h=Math.atan2(
-  2*(w*z+x*y),
-  1-2*(y*y+z*z)
- );
-
- return [r*DEG,p*DEG,h*DEG];
-}
-
-// ===== PRZETWARZANIE =====
-
-function processFrame(v){
- const now=performance.now();
-
- // Jednostki jak w działającej wersji 2.1
- const rawGyro=[
-  v[0]/14.286,
-  v[1]/14.286,
-  v[2]/14.286
- ];
-
- const ax=v[3]/2048;
- const ay=v[4]/2048;
- const az=v[5]/2048;
-
- const accMag=Math.hypot(ax,ay,az);
-
- // Kalibracja offsetów żyroskopu
- if(!calibrated){
-  if(!calStart)calStart=now;
-
-  // Odrzuć kalibrację przy wyraźnym ruchu
-  const moving=
-   accMag<0.90 || accMag>1.10 ||
-   Math.hypot(...rawGyro)>5;
-
-  if(moving){
-   calStart=now;
-   calCount=0;
-   calSum=[0,0,0];
-   $("calibration").textContent=
-    "Wykryto ruch. Trzymaj Triki nieruchomo.";
-   return;
-  }
-
-  for(let i=0;i<3;i++)
-   calSum[i]+=rawGyro[i];
-
-  calCount++;
-
-  const elapsed=now-calStart;
-
-  $("calibration").textContent=
-   "Kalibracja: "+Math.min(100,Math.round(
-    elapsed/CAL_TIME*100))+"%";
-
-  if(elapsed>=CAL_TIME && calCount>=30){
-   gyroBias=calSum.map(s=>s/calCount);
-   calibrated=true;
-   lastTime=0;
-
-   q=[1,0,0,0];
-   zeroRoll=zeroPitch=zeroYaw=0;
-
-   $("zero").disabled=false;
-   setStatus("Połączono – żyroskop skalibrowany");
-   $("calibration").textContent=
-    "Kalibracja gotowa. Ustaw motocykl pionowo i wyzeruj.";
-  }
-  return;
- }
-
- if(!lastTime){
-  lastTime=now;
-  return;
- }
-
- const dt=(now-lastTime)/1000;
- lastTime=now;
-
- if(dt<=0 || dt>0.25)return;
-
- const gx=rawGyro[0]-gyroBias[0];
- const gy=rawGyro[1]-gyroBias[1];
- const gz=rawGyro[2]-gyroBias[2];
-
- const correction=updateMahony(
-  gx,gy,gz,ax,ay,az,dt
- );
-
- const e=getEuler();
-
- // Konwencja Roll zgodna z poprzednią wersją
- roll=-e[1];
- pitch=e[0];
- yaw=e[2];
-
- const shownRoll=roll-zeroRoll;
- const shownPitch=pitch-zeroPitch;
-
- // Yaw względny, normalizacja do +/-180
- let shownYaw=yaw-zeroYaw;
- shownYaw=((shownYaw+180)%360+360)%360-180;
-
- maxLeft=Math.max(maxLeft,-shownRoll);
- maxRight=Math.max(maxRight,shownRoll);
-
- history.push(shownRoll);
- if(history.length>HISTORY)history.shift();
-
- frames++;
- if(now-lastHz>=1000){
-  hz=frames*1000/(now-lastHz);
-  frames=0;
-  lastHz=now;
- }
-
- updateUI({
-  gx,gy,gz,ax,ay,az,
-  accMag,correction,
-  shownRoll,shownPitch,shownYaw,now
- });
-}
-
-// ===== WYŚWIETLANIE =====
-
-function updateUI(d){
- const fmt=n=>n.toFixed(1)+"°";
-
- $("roll").textContent=fmt(d.shownRoll);
- $("pitch").textContent=fmt(d.shownPitch);
- $("yaw").textContent=fmt(d.shownYaw);
-
- $("left").textContent=fmt(Math.max(0,-d.shownRoll));
- $("right").textContent=fmt(Math.max(0,d.shownRoll));
-
- $("maxLeft").textContent=fmt(maxLeft);
- $("maxRight").textContent=fmt(maxRight);
-
- $("hz").textContent=hz.toFixed(0)+" Hz";
- $("runtime").textContent=
-  Math.floor((d.now-startTime)/1000)+" s";
-
- $("bike").style.transform=
-  `rotate(${d.shownRoll}deg)`;
-
- $("debug").textContent=
-`ŻYROSKOP PO KALIBRACJI [°/s]
-X: ${d.gx.toFixed(3)}
-Y: ${d.gy.toFixed(3)}
-Z: ${d.gz.toFixed(3)}
+let q=[1,0,0,0],kp=1,roll=0,pitch=0,yaw=0,zeroRoll=0,zeroPitch=0,zeroYaw=0;
+let maxLeft=0,maxRight=0,lastTime=0,startTime=0,lastHz=0,frames=0,hz=0,history=[];
+const HISTORY=240;
+let recording=false,records=[],lastRecordAt=0,stillSince=0,stillCount=0;
+const MAX_RECORDS=36000,RECORD_INTERVAL=50;
+let lastUi=0;
+function status(s){$('status').textContent=s}
+function resetState(){buffer=[];calibrated=false;calStart=0;calCount=0;calSum=[0,0,0];gyroBias=[0,0,0];lastCalSample=null;q=[1,0,0,0];roll=pitch=yaw=0;zeroRoll=zeroPitch=zeroYaw=0;maxLeft=maxRight=0;lastTime=0;startTime=performance.now();lastHz=startTime;frames=0;hz=0;history=[];stillSince=0;stillCount=0;recording=false;records=[];lastRecordAt=0;updateRecordUI();$('zero').disabled=true}
+async function connect(){try{if(!navigator.bluetooth){status('Brak Web Bluetooth w tej przeglądarce');return} $('connect').disabled=true;status('Wybierz Triki...');device=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'Triki'}],optionalServices:[SERVICE]});device.addEventListener('gattserverdisconnected',onDisconnect);const server=await device.gatt.connect();const service=await server.getPrimaryService(SERVICE);rx=await service.getCharacteristic(RX);tx=await service.getCharacteristic(TX);await tx.startNotifications();tx.addEventListener('characteristicvaluechanged',onData);resetState();await rx.writeValue(START);connected=true;$('disconnect').disabled=false;status('Kalibracja żyroskopu...');$('calibration').textContent='Trzymaj Triki całkowicie nieruchomo przez około 3 sekundy.'}catch(e){status('Błąd: '+e.message);$('connect').disabled=false;if(device?.gatt?.connected)device.gatt.disconnect()}}
+function disconnect(){if(device?.gatt?.connected)device.gatt.disconnect()}
+function onDisconnect(){connected=false;calibrated=false;$('connect').disabled=false;$('disconnect').disabled=true;$('zero').disabled=true;$('record').disabled=true;recording=false;updateRecordUI();status('Rozłączono')}
+$('connect').onclick=connect;$('disconnect').onclick=disconnect;
+function onData(event){const data=event.target.value;for(let i=0;i<data.byteLength;i++)buffer.push(data.getUint8(i));while(buffer.length>=14){if(buffer[0]!==0x22||(buffer[1]!==0&&buffer[1]!==1)){buffer.shift();continue}const bytes=buffer.splice(0,14),dv=new DataView(Uint8Array.from(bytes).buffer),v=[];for(let i=0;i<6;i++)v.push(dv.getInt16(2+i*2,true));processFrame(v)}if(buffer.length>1024)buffer=[]}
+function updateMahony(gx,gy,gz,ax,ay,az,dt){gx*=RAD;gy*=RAD;gz*=RAD;let[w,x,y,z]=q;const mag=Math.hypot(ax,ay,az);let correction=false;if(mag>.90&&mag<1.10){ax/=mag;ay/=mag;az/=mag;const vx=2*(x*z-w*y),vy=2*(w*x+y*z),vz=w*w-x*x-y*y+z*z;const ex=ay*vz-az*vy,ey=az*vx-ax*vz,ez=ax*vy-ay*vx;gx+=kp*ex;gy+=kp*ey;gz+=kp*ez;correction=true}const dw=.5*(-x*gx-y*gy-z*gz),dx=.5*(w*gx+y*gz-z*gy),dy=.5*(w*gy-x*gz+z*gx),dz=.5*(w*gz+x*gy-y*gx);w+=dw*dt;x+=dx*dt;y+=dy*dt;z+=dz*dt;const norm=Math.hypot(w,x,y,z);if(norm>0)q=[w/norm,x/norm,y/norm,z/norm];return correction}
+function getEuler(){const[w,x,y,z]=q;return[Math.atan2(2*(w*x+y*z),1-2*(x*x+y*y))*DEG,Math.asin(Math.max(-1,Math.min(1,2*(w*y-z*x))))*DEG,Math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))*DEG]}
+function processFrame(v){const now=performance.now();const raw=[v[0]/14.286,v[1]/14.286,v[2]/14.286];const ax=v[3]/2048,ay=v[4]/2048,az=v[5]/2048,mag=Math.hypot(ax,ay,az);
+if(!calibrated){if(!calStart)calStart=now;const moving=mag<.90||mag>1.10||Math.hypot(...raw)>5||(lastCalSample!==null&&Math.hypot(ax-lastCalSample[0],ay-lastCalSample[1],az-lastCalSample[2])>.025);lastCalSample=[ax,ay,az];if(moving){calStart=now;calCount=0;calSum=[0,0,0];$('calibration').textContent='Wykryto ruch – trzymaj Triki nieruchomo';return}for(let i=0;i<3;i++)calSum[i]+=raw[i];calCount++;const elapsed=now-calStart;$('calibration').textContent='Kalibracja: '+Math.min(100,Math.round(elapsed/CAL_TIME*100))+'%';if(elapsed>=CAL_TIME&&calCount>=30){gyroBias=calSum.map(s=>s/calCount);calibrated=true;lastTime=0;q=[1,0,0,0];$('zero').disabled=false;$('record').disabled=false;status('Połączono – żyroskop skalibrowany');$('calibration').textContent='Ustaw motocykl pionowo i wyzeruj pozycję.'}return}
+if(!lastTime){lastTime=now;return}const dt=(now-lastTime)/1000;lastTime=now;if(dt<=0||dt>.25)return;
+const gx=raw[0]-gyroBias[0],gy=raw[1]-gyroBias[1],gz=raw[2]-gyroBias[2];const corrected=updateMahony(gx,gy,gz,ax,ay,az,dt);const e=getEuler();roll=-e[1];pitch=e[0];yaw=e[2];const shownRoll=roll-zeroRoll,shownPitch=pitch-zeroPitch,shownYaw=((yaw-zeroYaw+180)%360+360)%360-180;
+// Ostrożna adaptacja offsetu: tylko gdy wszystkie osie niemal nieruchome,
+// przyspieszenie bliskie 1 g i orientacja akcelerometru jest stabilna.
+// To nie jest pewny detektor postoju motocykla.
+const still=mag>.985&&mag<1.015&&Math.hypot(gx,gy,gz)<.35;
+if(still){if(!stillSince)stillSince=now;stillCount++}else{stillSince=0;stillCount=0}
+if($('autoBias').checked&&stillSince&&now-stillSince>5000){const beta=Math.min(.001,dt*.02);for(let i=0;i<3;i++)gyroBias[i]+=beta*(raw[i]-gyroBias[i])}
+maxLeft=Math.max(maxLeft,-shownRoll);maxRight=Math.max(maxRight,shownRoll);history.push(shownRoll);if(history.length>HISTORY)history.shift();frames++;if(now-lastHz>=1000){hz=frames*1000/(now-lastHz);frames=0;lastHz=now}
+const quality=!corrected?'Korekta wstrzymana':mag<.97||mag>1.03?'Sprawdź przyspieszenia':'Korekta aktywna';
+if(recording&&now-lastRecordAt>=RECORD_INTERVAL){lastRecordAt=now;if(records.length<MAX_RECORDS){records.push([new Date().toISOString(),((now-startTime)/1000).toFixed(3),shownRoll.toFixed(3),shownPitch.toFixed(3),shownYaw.toFixed(3),gx.toFixed(3),gy.toFixed(3),gz.toFixed(3),ax.toFixed(4),ay.toFixed(4),az.toFixed(4),mag.toFixed(4),corrected?1:0,still?1:0])}else{recording=false;status('Limit zapisu osiągnięty – eksportuj CSV')}updateRecordUI()}
+if(now-lastUi>=80){lastUi=now;updateUI({now,shownRoll,shownPitch,shownYaw,gx,gy,gz,raw,rawInt:v,ax,ay,az,mag,corrected,still,quality});drawChart()}}
+function updateUI(d){const fmt=n=>n.toFixed(1)+'°';$('bigRoll').textContent=fmt(Math.abs(d.shownRoll));$('side').textContent=d.shownRoll>1?'PRAWO':d.shownRoll< -1?'LEWO':'PION';$('leanBar').style.width=Math.min(100,Math.abs(d.shownRoll)/60*100)+'%';$('roll').textContent=fmt(d.shownRoll);$('left').textContent=fmt(Math.max(0,-d.shownRoll));$('right').textContent=fmt(Math.max(0,d.shownRoll));$('pitch').textContent=fmt(d.shownPitch);$('yaw').textContent=fmt(d.shownYaw);$('maxLeft').textContent=fmt(maxLeft);$('maxRight').textContent=fmt(maxRight);$('runtime').textContent=Math.floor((d.now-startTime)/1000)+' s';$('hz').textContent=hz.toFixed(0)+' Hz';$('quality').textContent=d.quality;$('quality').className='pill '+(d.corrected?'good':'warning');$('debug').textContent=`DANE ŻYROSKOPU – BEZ KOREKCJI [°/s]
+X: ${d.raw[0].toFixed(4)}
+Y: ${d.raw[1].toFixed(4)}
+Z: ${d.raw[2].toFixed(4)}
 
 OFFSET ŻYROSKOPU [°/s]
 X: ${gyroBias[0].toFixed(4)}
 Y: ${gyroBias[1].toFixed(4)}
 Z: ${gyroBias[2].toFixed(4)}
 
+ŻYROSKOP PO ODJĘCIU OFFSETU [°/s]
+X: ${d.gx.toFixed(4)}
+Y: ${d.gy.toFixed(4)}
+Z: ${d.gz.toFixed(4)}
+
 AKCELEROMETR [g]
-X: ${d.ax.toFixed(3)}
-Y: ${d.ay.toFixed(3)}
-Z: ${d.az.toFixed(3)}
+X: ${d.ax.toFixed(4)}
+Y: ${d.ay.toFixed(4)}
+Z: ${d.az.toFixed(4)}
+Moduł: ${d.mag.toFixed(4)} g
 
-Moduł: ${d.accMag.toFixed(3)} g
-Korekta: ${d.correction?"AKTYWNA":"WSTRZYMANA"}
+DANE SUROWE Z RAMKI BLE [int16]
+Gyro X: ${d.rawInt[0]}
+Gyro Y: ${d.rawInt[1]}
+Gyro Z: ${d.rawInt[2]}
+Accel X: ${d.rawInt[3]}
+Accel Y: ${d.rawInt[4]}
+Accel Z: ${d.rawInt[5]}
 
-KWATERNION
-${q.map(n=>n.toFixed(5)).join(" | ")}`;
- drawChart();
-}
+ORIENTACJA PO ZEROWANIU [°]
+Roll: ${d.shownRoll.toFixed(3)}
+Pitch: ${d.shownPitch.toFixed(3)}
+Yaw względny: ${d.shownYaw.toFixed(3)}
 
-// ===== WYKRES =====
+USTAWIENIA I STAN FILTRA
+Kp: ${kp.toFixed(2)}
+Korekta akcelerometru: ${d.corrected?'AKTYWNA':'WSTRZYMANA'}
+Warunek bezruchu: ${d.still?'TAK':'NIE'}
+Automatyczna korekta offsetu: ${$('autoBias').checked?'WŁĄCZONA':'WYŁĄCZONA'}
+Kwaternion [w, x, y, z]:
+${q.map(x=>x.toFixed(6)).join(' | ')}
 
-const canvas=$("chart");
-const ctx=canvas.getContext("2d");
-
-function drawChart(){
- const width=canvas.clientWidth;
- const height=canvas.clientHeight;
- const dpr=window.devicePixelRatio||1;
-
- if(canvas.width!==Math.round(width*dpr) ||
-    canvas.height!==Math.round(height*dpr)){
-  canvas.width=Math.round(width*dpr);
-  canvas.height=Math.round(height*dpr);
- }
-
- ctx.setTransform(dpr,0,0,dpr,0,0);
- ctx.clearRect(0,0,width,height);
-
- const center=height/2;
- const scale=height/180;
-
- ctx.strokeStyle="#40536a";
- ctx.lineWidth=1;
- ctx.beginPath();
- ctx.moveTo(0,center);
- ctx.lineTo(width,center);
- ctx.stroke();
-
- if(history.length<2)return;
-
- ctx.strokeStyle="#46b6ff";
- ctx.lineWidth=2;
- ctx.beginPath();
-
- history.forEach((value,i)=>{
-  const x=i/(HISTORY-1)*width;
-  const y=center-value*scale;
-
-  if(i===0)ctx.moveTo(x,y);
-  else ctx.lineTo(x,y);
- });
-
- ctx.stroke();
-}
-
-// ===== PRZYCISKI =====
-
-$("zero").onclick=()=>{
- if(!calibrated)return;
-
- zeroRoll=roll;
- zeroPitch=pitch;
- zeroYaw=yaw;
-
- maxLeft=maxRight=0;
- history=[];
-
- setStatus("Pozycja motocykla wyzerowana");
-};
-
-$("resetMax").onclick=()=>{
- maxLeft=maxRight=0;
-};
-
-$("kp").oninput=e=>{
- kp=Number(e.target.value);
- $("kpValue").textContent=kp.toFixed(2);
-};
-
-</script>
-</body>
-</html>
+TRANSMISJA
+Częstotliwość: ${hz.toFixed(1)} Hz
+Czas sesji: ${((d.now-startTime)/1000).toFixed(1)} s
+Zapis CSV: ${recording?'AKTYWNY':'WYŁĄCZONY'}
+Próbki CSV: ${records.length}`}
+const canvas=$('chart'),ctx=canvas.getContext('2d');function drawChart(){if($('rideView').classList.contains('hidden'))return;const width=canvas.clientWidth,height=canvas.clientHeight,dpr=window.devicePixelRatio||1;if(canvas.width!==Math.round(width*dpr)||canvas.height!==Math.round(height*dpr)){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr)}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);const center=height/2,scale=height/140;ctx.strokeStyle='#40536a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,center);ctx.lineTo(width,center);ctx.stroke();if(history.length<2)return;ctx.strokeStyle='#46b6ff';ctx.lineWidth=2;ctx.beginPath();history.forEach((value,i)=>{const x=i/(HISTORY-1)*width,y=center-value*scale;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke()}
+$('zero').onclick=()=>{if(!calibrated)return;zeroRoll=roll;zeroPitch=pitch;zeroYaw=yaw;maxLeft=maxRight=0;history=[];status('Pozycja wyzerowana')};$('resetMax').onclick=()=>{maxLeft=maxRight=0};$('kp').oninput=e=>{kp=Number(e.target.value);$('kpValue').textContent=kp.toFixed(2)};
+$('rideTab').onclick=()=>{ $('rideView').classList.remove('hidden');$('diagView').classList.add('hidden');$('rideTab').classList.add('primary');$('diagTab').classList.remove('primary');drawChart()};$('diagTab').onclick=()=>{$('diagView').classList.remove('hidden');$('rideView').classList.add('hidden');$('diagTab').classList.add('primary');$('rideTab').classList.remove('primary')};
+function updateRecordUI(){$('record').textContent=recording?'Zatrzymaj zapis':'Rozpocznij zapis';$('record').disabled=!calibrated||records.length>=MAX_RECORDS;$('export').disabled=records.length===0;$('recordInfo').textContent=records.length+' próbek · '+(recording?'zapis aktywny':'zapis wyłączony')}
+$('record').onclick=()=>{if(!calibrated)return;recording=!recording;lastRecordAt=0;updateRecordUI()};$('clear').onclick=()=>{if(recording){status('Zatrzymaj zapis przed wyczyszczeniem');return}records=[];updateRecordUI()};$('export').onclick=()=>{if(!records.length)return;const header='timestamp_iso,elapsed_s,roll_deg,pitch_deg,yaw_deg,gx_dps,gy_dps,gz_dps,ax_g,ay_g,az_g,acc_magnitude_g,acc_correction,still_condition';const csv=[header,...records.map(row=>row.join(','))].join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='triki_moto_2_3_'+new Date().toISOString().replace(/[:.]/g,'-')+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000)};
+</script></body></html>
