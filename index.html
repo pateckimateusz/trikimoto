@@ -285,8 +285,96 @@ body.cockpit-locked #cockpit .max-dials .dial-arc {
   }
 }
 
+
+/* ============================================================
+   TRIKI MOTO 2.5.3 – SIATKA G: DWIE KOLUMNY
+   Lewa kolumna: aktualny kąt, nad obszarem siatki.
+   Prawa kolumna: duża siatka G, proporcje 1:1.
+   Wartości do regulacji: --g-left-column i --g-grid-size.
+   ============================================================ */
+#cockpit.grid-layout .instrument-cluster {
+  --g-left-column: 29%;
+  --g-grid-size: min(73vw, 420px);
+  display:grid !important;
+  grid-template-columns: var(--g-left-column) minmax(0,1fr);
+  grid-template-rows: auto auto;
+  align-items:start;
+  gap:12px 0;
+  min-height:0;
+}
+#cockpit.grid-layout .center-display {
+  grid-column:1;
+  grid-row:1;
+  z-index:2;
+  align-self:start;
+  justify-self:start;
+  width:170%;
+  max-width:none;
+  text-align:left;
+  padding-top:12px;
+  pointer-events:none;
+}
+#cockpit.grid-layout .center-label {text-align:left;font-size:10px;letter-spacing:1px}
+#cockpit.grid-layout .angle-line {text-align:left}
+#cockpit.grid-layout .angle-line strong {
+  font-size:clamp(36px,9vw,72px) !important;
+  line-height:1.1;
+  letter-spacing:-2px;
+}
+#cockpit.grid-layout .center-display .side {text-align:left;font-size:12px}
+#cockpit.grid-layout .motion-grid-panel {
+  grid-column:2;
+  grid-row:1;
+  width:100%;
+  max-width:none;
+  min-width:0;
+  margin:0 !important;
+  text-align:center;
+  align-self:center;
+}
+#cockpit.grid-layout .motion-grid {
+  width:min(100%, var(--g-grid-size)) !important;
+  height:auto !important;
+  aspect-ratio:1/1;
+  margin:0 auto 8px !important;
+}
+#cockpit.grid-layout .motion-readout {font-size:11px;white-space:normal}
+#cockpit.grid-layout .motion-help {display:none}
+#cockpit.grid-layout .max-dials {
+  grid-column:1/-1;
+  grid-row:2;
+  margin:0 auto;
+}
+@media(max-width:560px){
+ #cockpit.grid-layout .instrument-cluster{--g-left-column:27%;--g-grid-size:74vw;gap:8px 0}
+ #cockpit.grid-layout .center-display{width:180%;padding-top:8px}
+ #cockpit.grid-layout .angle-line strong{font-size:clamp(34px,10vw,54px) !important}
+ #cockpit.grid-layout .center-label{font-size:8px;letter-spacing:0}
+ #cockpit.grid-layout .center-display .side{font-size:10px}
+ #cockpit.grid-layout .motion-grid .axis-label{font-size:8px}
+}
+body.cockpit-locked #cockpit.grid-layout .instrument-cluster {
+  --g-left-column:27%;
+  --g-grid-size:min(73vw, 37dvh, 350px);
+  display:grid !important;
+  flex:1 1 auto;
+  align-content:center;
+  justify-content:stretch;
+  gap:clamp(3px,.8dvh,10px) 0;
+}
+body.cockpit-locked #cockpit.grid-layout .motion-grid {
+  width:min(100%, var(--g-grid-size)) !important;
+  height:auto !important;
+}
+body.cockpit-locked #cockpit.grid-layout .center-display{flex:none}
+body.cockpit-locked #cockpit.grid-layout .max-dials{flex:none}
+@media(max-height:720px){
+ body.cockpit-locked #cockpit.grid-layout .instrument-cluster{--g-grid-size:min(70vw,30dvh,270px);gap:2px 0}
+ body.cockpit-locked #cockpit.grid-layout .motion-readout{font-size:10px}
+}
+
 </style></head><body><main>
-<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.5.1</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
+<h1>TRIKI <span style="color:#40aaff">MOTO</span> <small style="font-size:12px;letter-spacing:2px">2.5.3</small></h1><p class="muted">Testowy rejestrator przechyłu · Bluetooth LE</p>
 <section class="card"><div class="row"><button class="primary" id="connect">Połącz Triki</button><button id="disconnect" disabled>Rozłącz</button><button id="zero" disabled>Wyzeruj pozycję</button></div><p id="status">Niepołączono</p><small id="calibration">Kalibracja żyroskopu rozpocznie się po połączeniu.</small></section>
 
 <div id="rideView">
@@ -298,6 +386,8 @@ body.cockpit-locked #cockpit .max-dials .dial-arc {
 
   <div class="instrument-cluster">
     <div class="center-display"><div class="center-label">AKTUALNY KĄT</div><div class="angle-line"><strong id="bigRoll">0.0°</strong></div><div class="side" id="side">PION</div><div id="classicLeanScale" class="lean-scale"><span>LEWO</span><div class="scale-track"><i class="scale-center"></i><i id="leanMarker" class="scale-marker"></i></div><span>PRAWO</span></div>
+
+    </div>
       <div id="motionGridPanel" class="motion-grid-panel hidden">
         <div class="motion-grid" role="img" aria-label="Poziomo: przechył motocykla; pionowo: przyspieszenie i hamowanie">
           <span class="axis-label axis-top">PRZYSPIESZANIE</span>
@@ -309,7 +399,6 @@ body.cockpit-locked #cockpit .max-dials .dial-arc {
         <div class="motion-readout" id="motionReadout">Przyspieszenie wzdłużne: 0.00 g</div>
         <p class="motion-help">Oś pionowa: orientacyjna składowa przyspieszenia bez grawitacji · zakres ±0,6 g</p>
       </div>
-    </div>
     <div class="max-dials">
       <div class="dial dial-left"><div class="dial-label">MAX LEWO</div><div class="dial-arc"><div class="dial-fill" id="leftArc"></div><div class="dial-center"><strong id="maxLeft">0.0°</strong><small>MAKSIMUM</small></div></div></div>
       <div class="dial dial-right"><div class="dial-label">MAX PRAWO</div><div class="dial-arc"><div class="dial-fill" id="rightArc"></div><div class="dial-center"><strong id="maxRight">0.0°</strong><small>MAKSIMUM</small></div></div></div>
@@ -356,7 +445,7 @@ function selectCockpitVisual(mode){
  $('gridVisual').classList.toggle('selected',mode==='grid');
  $('classicVisual').setAttribute('aria-pressed',String(mode==='classic'));
  $('gridVisual').setAttribute('aria-pressed',String(mode==='grid'));
- $('classicLeanScale').classList.toggle('hidden',mode==='grid');
+ $('cockpit').classList.toggle('grid-layout',mode==='grid');$('classicLeanScale').classList.toggle('hidden',mode==='grid');
  $('motionGridPanel').classList.toggle('hidden',mode!=='grid');
 }
 $('classicVisual').onclick=()=>selectCockpitVisual('classic');
